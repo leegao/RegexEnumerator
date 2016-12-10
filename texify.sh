@@ -13,13 +13,8 @@ fi
 # Check to see if RAW.md has been updated
 
 changes=$(git diff --name-only HEAD^ | grep "RAW.md")
-readme=$(git diff --name-only HEAD^ | grep "README.md")
 
 if [ -z "$changes" ]; then
-    exit
-fi
-
-if [ ! -z "$readme" ]; then
     exit
 fi
 
