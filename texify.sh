@@ -52,11 +52,11 @@ if [ $? -eq 0 ]; then
     git add README.md
     echo
     read -p "Do you want to amend changes to ${color}README.md$reset now? [Y/n]: " amend
-    if [ "$meh" = "" ]; then
-        meh='Y'
+    if [ "$amend" = "" ]; then
+        amend='Y'
     fi
 
-    case $meh in
+    case $amend in
         [Yy] ) ;;
         [Nn] ) exit;;
         * ) exit;;
