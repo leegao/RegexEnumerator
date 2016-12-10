@@ -52,6 +52,24 @@ linear equations and to translate numerically computed roots into algebraic form
 
 ### Usage
 
+#### Regular Expression Syntax
+
+We are using vanilla regular expression. You can't use the + operator or the ? operator, but you can always encode
+these operators as follows.
+
+* $e^+ \to e \cdot e^*$
+* $e? \to (e \mid \%)$
+
+Here, `%` denotes the "empty" transition $\epsilon$ in formal languages. In effect, it acts as the
+identity element of concatenation, so that $\epsilon \cdot e \to e$. For example, the regular expression of
+comma delimited language $(e^+,)*e^+$ can be encoded as
+```python
+e = 'some regular expression'
+regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
+```
+
+#### Library Functions
+
 `regex_enumerate` offers a few library functions for you to use.
 
 * `enumerate_coefficients`: Runs the magical algorithm to give you an algorithm that can compute
@@ -108,3 +126,18 @@ $$
 2.0 \delta\left(n\right) + 1.0 \delta\left(n - 1\right) + {\binom{n + 1}{1}} - 3
 $$
 Note that this differs from the above since we're enumerating $(0^+1)0^+$ instead of $(0^+1)^* 0^+$.
+
+#### Caveat
+
+There are many regular expressions that are ambiguous. For example, the regular expression
+$$
+0 \mid 0
+$$
+is inherently ambiguous. On encountering a `0`, it's not clear which side of the bar it belongs to. While
+this poses no challenges to parsing (since we don't output a parse-tree), it does matter in enumeration.
+In particular, the direct translation of this expression will claim that there are 2 strings of size 1
+in this language.
+
+There are ways to circumvent this, but I haven't gotten around to tackling this problem yet. Therefore, know that
+for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
+There is always a way to do this, though it might create an exponential number of additional states.

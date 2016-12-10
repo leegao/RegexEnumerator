@@ -48,6 +48,24 @@ linear equations and to translate numerically computed roots into algebraic form
 
 ### Usage
 
+#### Regular Expression Syntax
+
+We are using vanilla regular expression. You can't use the + operator or the ? operator, but you can always encode
+these operators as follows.
+
+* <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/af1c832a7b0568f7106622bd1c34e380.svg?invert_in_darkmode" align=middle width=77.54802pt height=26.95407pt/>
+* <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9c40d61f55391df9c3e110074bf2e876.svg?invert_in_darkmode" align=middle width=88.31856pt height=25.43409pt/>
+
+Here, `%` denotes the "empty" transition <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.1668915pt height=14.93184pt/> in formal languages. In effect, it acts as the
+identity element of concatenation, so that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ffbd759215219ed839b38b1f27aedd2f.svg?invert_in_darkmode" align=middle width=58.917705pt height=15.38856pt/>. For example, the regular expression of
+comma delimited language <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4052b2961cf5ab33404b96cd5e12aae9.svg?invert_in_darkmode" align=middle width=71.423715pt height=26.95407pt/> can be encoded as
+```python
+e = 'some regular expression'
+regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
+```
+
+#### Library Functions
+
 `regex_enumerate` offers a few library functions for you to use.
 
 * `enumerate_coefficients`: Runs the magical algorithm to give you an algorithm that can compute
@@ -102,3 +120,16 @@ linear equations and to translate numerically computed roots into algebraic form
 The magic behind this will be discussed in the next section. The <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c068b57af6b6fa949824f73dcb828783.svg?invert_in_darkmode" align=middle width=41.681475pt height=23.24256pt/> code looks like 
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2382f4301164b8719a1e94d28f7c7e73.svg?invert_in_darkmode" align=middle width=267.8313pt height=39.45249pt/></p>
 Note that this differs from the above since we're enumerating <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d2432a60d1dc5806cd53447ce48d2e43.svg?invert_in_darkmode" align=middle width=57.942225pt height=26.95407pt/> instead of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f9d2f9a74a3d1a9fc852220717fcbd49.svg?invert_in_darkmode" align=middle width=65.49939pt height=26.95407pt/>.
+
+#### Caveat
+
+There are many regular expressions that are ambiguous. For example, the regular expression
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c983706ca99ab3174d64641faec9442f.svg?invert_in_darkmode" align=middle width=30.13692pt height=16.438356pt/></p>
+is inherently ambiguous. On encountering a `0`, it's not clear which side of the bar it belongs to. While
+this poses no challenges to parsing (since we don't output a parse-tree), it does matter in enumeration.
+In particular, the direct translation of this expression will claim that there are 2 strings of size 1
+in this language.
+
+There are ways to circumvent this, but I haven't gotten around to tackling this problem yet. Therefore, know that
+for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
+There is always a way to do this, though it might create an exponential number of additional states.
