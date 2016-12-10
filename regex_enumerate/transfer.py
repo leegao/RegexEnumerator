@@ -1,5 +1,6 @@
-from parse import parse
 from collections import defaultdict
+
+from regex_enumerate.parse import parse
 
 
 def transfer(regex, what = None):

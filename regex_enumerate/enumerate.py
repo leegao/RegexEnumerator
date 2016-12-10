@@ -7,7 +7,7 @@ from numpy.polynomial import Polynomial as P
 from scipy.special import comb
 from sympy import nsimplify, sympify, binomial, DiracDelta
 
-from transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term
+from regex_enumerate.transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term
 
 
 def exact(regex, n, what = None, use_overflow = True):
