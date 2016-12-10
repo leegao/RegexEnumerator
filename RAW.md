@@ -64,4 +64,11 @@ linear equations and to translate numerically computed roots into algebraic form
       print(list(islice(enumerate_coefficients('(00+,)00+'), 10)))
       # [0.0, 1.0, 0.99999999999999989, 1.9999999999999998, 2.9999999999999996, 4.9999999999999982, 7.9999999999999982, 12.999999999999998, 20.999999999999993, 33.999999999999986].
 
+* `exact_coefficients`: Uses a dynamic program to compute the same coefficients. Useful for validation
+  and pure computation, but does not reveal any algebraic structure within the problem.
+  
+      from regex_enumerate import exact_coefficients
+      from itertools import islice
       
+      print(list(islice(exact_coefficients('(00+,)00+'), 10)))
+      # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
