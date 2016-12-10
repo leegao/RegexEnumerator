@@ -239,20 +239,3 @@ def print_simpl(*args):
     q = print_poly(q)
     size = max(len(p), len(q))
     return (' ' * lsize) + p + '\n' + left + ' + ' +  ('-' * size) + '\n' + (' ' * lsize) + q
-
-if __name__ == '__main__':
-    ast = transfer("(1|%)(00*1)*0*")
-    rationalized = rationalize(ast)
-    print(print_rat(*rationalized))
-    print()
-    print(print_simpl(simplify(*rationalized)))
-    print()
-    print('-' * 50)
-    ast = transfer("(00*1)*")
-    rationalized = rationalize(ast)
-    print(print_rat(*rationalized))
-    print()
-    print(print_simpl(simplify(*rationalized)))
-    print()
-    #print(division({0 : 1, 1 : -1, 2 : -1}, {0 : 1, 1 : -1}))
-

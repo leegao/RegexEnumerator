@@ -29,7 +29,7 @@ def exact(regex, n, what = None, use_overflow = True):
         coeff += cur[n] if n in cur else 0
         _, cur = mul(('v', cur), ('v', q))
 
-    return coeff
+    return list(map(int, coeff))
 
 
 def newton(p, roots):
