@@ -27,7 +27,7 @@ exec < /dev/tty
 
 read -p "[readme2tex] ${color}RAW.md$reset has changed; would you like to update ${color}README.md$reset as well? This will run
 
-  > python -m readme2tex --output ${color}README.md$reset --readme ${color}RAW.md$reset --branch ${color}svgs$reset --svgdir 'svgs' --input 'RAW.md'
+  > python -m readme2tex --output ${color}README.md$reset --readme ${color}RAW.md$reset --branch ${color}svgs$reset --svgdir 'svgs'
 
 Would you like to run this now? [Y/n]: " meh
 
@@ -44,7 +44,7 @@ esac
 tput setaf 3
 echo
 echo "Running readme2tex..."
-python -m readme2tex --output README.md --readme RAW.md --branch svgs --svgdir 'svgs' --input 'RAW.md'
+python -m readme2tex --output README.md --readme RAW.md --branch svgs --svgdir 'svgs'
 echo $reset
 
 if [ $? -eq 0 ]; then
