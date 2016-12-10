@@ -1,6 +1,6 @@
 from parsy import generate, string, regex
 
-x = regex(r'[a-zA-Z0-9]')
+x = regex(r'[^%*()|]')
 
 
 @generate
