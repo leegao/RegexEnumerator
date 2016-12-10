@@ -1,14 +1,13 @@
 from collections import defaultdict
-from itertools import islice
 
 import mpmath
 from numpy import array
 from numpy.linalg import solve, norm
 from numpy.polynomial import Polynomial as P
 from scipy.special import comb
-from sympy import nsimplify, latex, sympify, binomial, DiracDelta
+from sympy import nsimplify, sympify, binomial, DiracDelta
 
-from transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term, print_simpl
+from transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term
 
 
 def exact(regex, n, what = None, use_overflow = True):
@@ -214,6 +213,8 @@ def evaluate_expression(expr, n):
     return expr.subs('n', n).subs(DiracDelta(0), 1)
 
 if __name__ == '__main__':
+    from itertools import islice
+
     regexes = [
         "(00*1)*", # 1-separated strings that starts with 0 and ends with 1
         "(%|1|11)(00*(1|11))*0* | 1", # complete 1 or 11-separated strings
@@ -225,8 +226,8 @@ if __name__ == '__main__':
     ]
     for regex in regexes:
         print("Checking %s." % regex)
-        exact_form = list(islice(exact_coefficients(regex), 10))
-        algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 10))
+        exact_form = list(islice(exact_coefficients(regex), 20))
+        algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 20))
         print("Expecting %s,\nActual    %s." % (exact_form, algebraic))
         print("It's algebraic form is %s" % algebraic_form(regex))
         print()
