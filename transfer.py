@@ -164,7 +164,7 @@ def process(p):
     return q
 
 
-def lt(p):
+def leading_term(p):
     keys = list(process(p).keys())
     if not keys: return 0, 0
     key = max(keys)
@@ -176,8 +176,8 @@ def division(p, q):
     Computes the quotient and remainder of p/q
     :return: quotient, remainder
     '''
-    ltp = lt(p)
-    ltq = lt(q)
+    ltp = leading_term(p)
+    ltq = leading_term(q)
     if not ltp[0] and not ltp[1]: return {}, ({}, {0 : 1})
     if ltp[0] < ltq[0]:
         return {}, (p, q)

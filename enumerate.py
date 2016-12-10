@@ -7,7 +7,7 @@ from numpy.polynomial import Polynomial as P
 from scipy.special import comb
 from sympy import nsimplify, latex, sympify, binomial
 
-from transfer import transfer, rationalize, simplify, process, down_p, mul, lt
+from transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term
 
 
 def exact(regex, n, what = None, use_overflow = True):
@@ -150,20 +150,38 @@ def extract_coefficients_algebraically(regex, what = None, threshold = 1e-3):
     ast = transfer(regex, what)
     # rationalize(regex) = overflow(z) + top(z)/bottom(z), where the quotient is irreducible.
     overflow, (top, bottom) = simplify(*rationalize(ast))
-    pow, _ = lt(bottom)
-    p = P([bottom[i] if i in bottom else 0 for i in range(pow + 1)][::])
-    roots = p.roots()
-    roots = newton(p, roots)
-    roots = closed_form(p, roots)
-    buckets = cluster_roots(p, roots, threshold=threshold)
-    # roots of mulitplicity k has expanded form binom[n+k-1,k-1] * (-a)**(n - k)
-    degree = len(roots)
-    basis = lambda n: array([comb(n + k - 1, k - 1) * (-1)**k * (root)**(-n - k) for (root, k) in collate(buckets)])
-    mat = array([basis(n) for n in range(degree)])
-    target = array([exact(regex, n, what=what, use_overflow=False) for n in range(degree)])
-    coeffs = solve(mat, target)
+    pow, _ = leading_term(bottom)
+    # Express our bottom polynomial as a numpy polynomial-vector.
+    polynomial = P([bottom[k] if k in bottom else 0 for k in range(pow + 1)])
 
-    return (lambda n: abs(basis(n).dot(coeffs)) + (overflow[n] if n in overflow else 0)), (dict(buckets), coeffs, p, overflow)
+    # Compute, refine, and custer the roots
+    roots = polynomial.roots()
+    roots = newton(polynomial, roots)
+    roots = closed_form(polynomial, roots)
+    clusters = cluster_roots(polynomial, roots, threshold=threshold)
+
+    # roots of multiplicity k has expanded form binom[n+k-1,k-1] * (r)**(-n - k) * (-1)**k
+    degree = len(roots)
+    # This is the generator for the extended Vandermonde matrix augmented with the multiplicity of a root
+    basis = lambda n: array(
+        [comb(n + k - 1, k - 1) * (-1)**k * (root)**(-n - k) for (root, k) in collate(clusters)])
+    vandermonde_matrix = array([basis(n) for n in range(degree)])
+    target = array([exact(regex, n, what=what, use_overflow=False) for n in range(degree)])
+    partial_coefficients = solve(vandermonde_matrix, target)
+
+    return (
+        # A function that computes the coefficient for n
+        (lambda n: abs(basis(n).dot(partial_coefficients)) + (overflow[n] if n in overflow else 0)),
+        # internal states to reconstruct the closed form enumeration
+        (dict(clusters), partial_coefficients, polynomial, overflow)
+    )
+
+def enumerate_coefficients(regex, what = None, threshold = 1e-3):
+    coefficients, _ = extract_coefficients_algebraically(regex, what, threshold)
+    n = 0
+    while True:
+        yield coefficients(n)
+        n += 1
 
 if __name__ == '__main__':
     regex = "(00*1)*"
