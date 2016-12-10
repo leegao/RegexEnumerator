@@ -58,17 +58,53 @@ linear equations and to translate numerically computed roots into algebraic form
   the count of words of size `n` in time that is only proportional (linearly) to the number of terms in your
   regular expression.
   
-      from regex_enumerate import enumerate_coefficients
-      from itertools import islice
-      
-      print(list(islice(enumerate_coefficients('(00+,)00+'), 10)))
-      # [0.0, 1.0, 0.99999999999999989, 1.9999999999999998, 2.9999999999999996, 4.9999999999999982, 7.9999999999999982, 12.999999999999998, 20.999999999999993, 33.999999999999986].
+  ```python
+  from regex_enumerate import enumerate_coefficients
+  from itertools import islice
+  
+  print(list(islice(enumerate_coefficients('(00+1)*00+'), 10)))
+  # [0.0, 1.0, 0.99999999999999989, 1.9999999999999998, 2.9999999999999996, 4.9999999999999982, 7.9999999999999982, 12.999999999999998, 20.999999999999993, 33.999999999999986].
+  ```
 
 * `exact_coefficients`: Uses a dynamic program to compute the same coefficients. Useful for validation
   and pure computation, but does not reveal any algebraic structure within the problem.
   
-      from regex_enumerate import exact_coefficients
-      from itertools import islice
-      
-      print(list(islice(exact_coefficients('(00+,)00+'), 10)))
-      # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+  ```python
+  from regex_enumerate import exact_coefficients
+  from itertools import islice
+  
+  print(list(islice(exact_coefficients('(00+1)*00+'), 10)))
+  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+  ```
+
+* `algebraic_form`: Computes the algebraic closed form of a regular expression.
+
+  ```python
+  from regex_enumerate import algebraic_form, evaluate_expression
+  from sympy import latex, pprint
+  
+  formula = algebraic_form('(00*1)00*')
+  
+  # Normal Form
+  print(formula)
+  # 2.0*DiracDelta(n) + 1.0*DiracDelta(n - 1) + binomial(n + 1, 1) - 3
+  
+  # Latex
+  print(latex(formula))
+  # 2.0 \delta\left(n\right) + 1.0 \delta\left(n - 1\right) + {\binom{n + 1}{1}} - 3
+  
+  # ASCII/Unicode pretty print
+  print(pprint(formula))
+  #                                             /n + 1\
+  # 2.0*DiracDelta(n) + 1.0*DiracDelta(n - 1) + |     | - 3
+  #                                             \  1  /
+  
+  print(evaluate_expression(formula, 10))
+  # 8
+  ```
+  
+The magic behind this will be discussed in the next section. The $\text{\LaTeX}$ code looks like 
+$$
+2.0 \delta\left(n\right) + 1.0 \delta\left(n - 1\right) + {\binom{n + 1}{1}} - 3
+$$
+Note that this differs from the above since we're enumerating $(0^+1)0^+$ instead of $(0^+1)^* 0^+$.
