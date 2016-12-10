@@ -1,13 +1,14 @@
 from collections import defaultdict
+from itertools import islice
 
 import mpmath
 from numpy import array
-from numpy.linalg import solve
+from numpy.linalg import solve, norm
 from numpy.polynomial import Polynomial as P
 from scipy.special import comb
-from sympy import nsimplify, latex, sympify, binomial
+from sympy import nsimplify, latex, sympify, binomial, DiracDelta
 
-from transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term
+from transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term, print_simpl
 
 
 def exact(regex, n, what = None, use_overflow = True):
@@ -46,7 +47,7 @@ def exact(regex, n, what = None, use_overflow = True):
         # update p*q**n to p*q**(n + 1)
         _, qn = mul(('v', qn), ('v', q))
 
-    return int(coefficients)
+    return coefficients if not use_overflow else int(round(coefficients))
 
 
 def exact_coefficients(regex, what = None, use_overflow = True):
@@ -58,7 +59,7 @@ def exact_coefficients(regex, what = None, use_overflow = True):
     '''
     n = 0
     while True:
-        yield exact(regex, what, use_overflow) # TODO: inline this in the future so we don't recompute the quotients
+        yield exact(regex, n, what, use_overflow) # TODO: inline this in the future so we don't recompute the quotients
         n += 1
 
 
@@ -73,11 +74,12 @@ def newton(polynomial, roots):
     end up refining noise.
     '''
     derivatives = polynomial.deriv()
-    r = roots
     # Heuristic: do two iterations
-    r = r - polynomial(r) / derivatives(r)
-    r = r - polynomial(r) / derivatives(r)
-    return r
+    if norm(derivatives(roots), 2) < 1e-5: return roots
+    roots = roots - polynomial(roots) / derivatives(roots)
+    if norm(derivatives(roots), 2) < 1e-5: return roots
+    roots = roots - polynomial(roots) / derivatives(roots)
+    return roots
 
 
 def closed_form(polynomial, roots, symbolic=False):
@@ -173,8 +175,9 @@ def extract_coefficients_algebraically(regex, what = None, threshold = 1e-3):
         # A function that computes the coefficient for n
         (lambda n: abs(basis(n).dot(partial_coefficients)) + (overflow[n] if n in overflow else 0)),
         # internal states to reconstruct the closed form enumeration
-        (dict(clusters), partial_coefficients, polynomial, overflow)
+        (dict(clusters), basis, partial_coefficients, polynomial, overflow)
     )
+
 
 def enumerate_coefficients(regex, what = None, threshold = 1e-3):
     coefficients, _ = extract_coefficients_algebraically(regex, what, threshold)
@@ -183,37 +186,47 @@ def enumerate_coefficients(regex, what = None, threshold = 1e-3):
         yield coefficients(n)
         n += 1
 
+
+def inverse_symbolic(n, threshold=1e-5):
+    rl = mpmath.identify(n.real, tol=1e-3, maxcoeff=30)
+    im = mpmath.identify(n.imag, tol=1e-3, maxcoeff=30)
+    if not rl or abs(n.real - float(nsimplify(rl))) > threshold:
+        rl = nsimplify(n.real).evalf(5)
+    if not im or abs(n.imag - float(nsimplify(im))) > threshold:
+        im = nsimplify(n.imag).evalf(5)
+    return (sympify(rl) + sympify(im) * 1j)
+
+
+def algebraic_form(regex, what = None, threshold = 1e-3):
+    _, (clusters, basis, partial_coefficients, bottom, overflow) = extract_coefficients_algebraically(regex, what, threshold)
+    n = sympify('n')
+    series = 0
+    for i, (root, k) in enumerate(collate(clusters)):
+        symbolic_root = inverse_symbolic(root)
+        partial_coefficient = inverse_symbolic(partial_coefficients[i])
+        series += partial_coefficient * binomial(n + k - 1, k - 1) * ((-1) ** k) * (symbolic_root ** (-n - k))
+    for k, coefficient in overflow.items():
+        series += coefficient * DiracDelta(n - k)
+    return series
+
+
+def evaluate_expression(expr, n):
+    return expr.subs('n', n).subs(DiracDelta(0), 1)
+
 if __name__ == '__main__':
-    regex = "(00*1)*"
-    # regex = "(%|1|11)(00*(1|11))*0* | 1"
-    # regex = "(000)*(000)*(00)*(00)*(00)*"
-    # regex = "1*(22)*(333)*(4444)*(55555)*" # 1 5 10 25
-    # regex = "11*" * 5 # 5 compositions of n
-    regex = "(11*)*" # all compositions of n
-    regex = "(1|22|333)*"
-    print([exact(regex, i) for i in range(10)])
-    gf, (buckets, coeffs, p, overflow) = extract_coefficients_algebraically(regex, threshold=2e-3)
-    print([round(gf(n)) for n in range(15)])
-
-    def inverse_symbolic(n, threshold = 1e-5):
-        rl = mpmath.identify(n.real, tol=1e-3, maxcoeff=30)
-        im = mpmath.identify(n.imag, tol=1e-3, maxcoeff=30)
-        if not rl or abs(n.real - float(nsimplify(rl))) > threshold:
-            rl = nsimplify(n.real).evalf(5)
-        if not im or abs(n.imag - float(nsimplify(im))) > threshold:
-            im = nsimplify(n.imag).evalf(5)
-        return (sympify(rl) + sympify(im) * 1j)
-
-    def print_series(buckets, coeffs, overflow):
-        n = sympify('n')
-        s = 0
-        for i, (root, power) in enumerate(collate(buckets)):
-            symroot = inverse_symbolic(root)
-            coeff = inverse_symbolic(coeffs[i])
-            s += (coeff * binomial(n + power - 1, power - 1) * (-1)**power * symroot ** (-n - power))
-        lt = latex(s)
-        for k, c in overflow.items():
-            lt += (r" + %s\delta_{n=%s}"%(c, k))
-        print(lt)
-
-    print_series(buckets, coeffs, overflow=overflow)
+    regexes = [
+        "(00*1)*", # 1-separated strings that starts with 0 and ends with 1
+        "(%|1|11)(00*(1|11))*0* | 1", # complete 1 or 11-separated strings
+        "(000)*(111)*(22)*(33)*(44)*", # complex root to (1 - z**3)**-2 * (1 - z**2)**-3
+        "1*(22)*(333)*(4444)*(55555)*",  # number of ways to make change give coins of denomination 1 2 3 4 and 5
+        "11*" * 5,  # 5 compositions of n
+        "(11*)*",  # all compositions of n
+        "a*b*c*(dd)*|e",
+    ]
+    for regex in regexes:
+        print("Checking %s." % regex)
+        exact_form = list(islice(exact_coefficients(regex), 10))
+        algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 10))
+        print("Expecting %s,\nActual    %s." % (exact_form, algebraic))
+        print("It's algebraic form is %s" % algebraic_form(regex))
+        print()
