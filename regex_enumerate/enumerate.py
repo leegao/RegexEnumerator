@@ -214,6 +214,7 @@ def evaluate_expression(expr, n):
 
 if __name__ == '__main__':
     from itertools import islice
+    from sympy import latex
 
     regexes = [
         "(00*1)*", # 1-separated strings that starts with 0 and ends with 1
@@ -223,6 +224,7 @@ if __name__ == '__main__':
         "11*" * 5,  # 5 compositions of n
         "(11*)*",  # all compositions of n
         "a*b*c*(dd)*|e",
+        "(00*1)*00*",
     ]
     for regex in regexes:
         print("Checking %s." % regex)
@@ -230,4 +232,5 @@ if __name__ == '__main__':
         algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 20))
         print("Expecting %s,\nActual    %s." % (exact_form, algebraic))
         print("It's algebraic form is %s" % algebraic_form(regex))
+        print(latex(algebraic_form(regex)))
         print()
