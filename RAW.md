@@ -1,5 +1,7 @@
 # Regex Enumerator
 
+Enumerate Regular Expressions the Fun Way.
+
 $$
 [z^n] \frac{p(z)}{q(z)} = \Theta({n + k - 1 \choose k - 1}\rho^{-n}) ~~~ \text{where $\rho$ is the smallest root of $q(z)$, and $k$ its multiplicity.}
 $$
@@ -39,3 +41,27 @@ $$
 
 Now, this might not look very pretty, but it's still pretty cool that there is a (computable) closed form expression that
 counts every regular expression.
+
+-----------------------------------
+
+### Installation
+
+This library is just meant to be a demonstration. For now, you can install it by adding the `regex_enumerate` directory
+to your `PYTHONPATH`. Note that you will first need to install `numpy`, `scipy`, and `sympy` in order to support solving a few
+linear equations and to translate numerically computed roots into algebraic forms, if they are available.
+
+### Usage
+
+`regex_enumerate` offers a few library functions for you to use.
+
+* `enumerate_coefficients`: Runs the magical algorithm to give you an algorithm that can compute
+  the count of words of size `n` in time that is only proportional (linearly) to the number of terms in your
+  regular expression.
+  
+      from regex_enumerate import enumerate_coefficients
+      from itertools import islice
+      
+      print(list(islice(enumerate_coefficients('(00+,)00+'), 10)))
+      # [0.0, 1.0, 0.99999999999999989, 1.9999999999999998, 2.9999999999999996, 4.9999999999999982, 7.9999999999999982, 12.999999999999998, 20.999999999999993, 33.999999999999986].
+
+      

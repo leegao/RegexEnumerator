@@ -1,5 +1,7 @@
 # Regex Enumerator
 
+Enumerate Regular Expressions the Fun Way.
+
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3be5b46356ad1be74d4b8030a050c49d.svg?invert_in_darkmode" align=middle width=655.4196pt height=39.45249pt/></p>
 
 <sub>*Or how I learned to stop worrying and start counting things with calculus*</sub>
@@ -35,3 +37,27 @@ for this sequence.
 
 Now, this might not look very pretty, but it's still pretty cool that there is a (computable) closed form expression that
 counts every regular expression.
+
+-----------------------------------
+
+### Installation
+
+This library is just meant to be a demonstration. For now, you can install it by adding the `regex_enumerate` directory
+to your `PYTHONPATH`. Note that you will first need to install `numpy`, `scipy`, and `sympy` in order to support solving a few
+linear equations and to translate numerically computed roots into algebraic forms, if they are available.
+
+### Usage
+
+`regex_enumerate` offers a few library functions for you to use.
+
+* `enumerate_coefficients`: Runs the magical algorithm to give you an algorithm that can compute
+  the count of words of size `n` in time that is only proportional (linearly) to the number of terms in your
+  regular expression.
+  
+      from regex_enumerate import enumerate_coefficients
+      from itertools import islice
+      
+      print(list(islice(enumerate_coefficients('(00+,)00+'), 10)))
+      # [0.0, 1.0, 0.99999999999999989, 1.9999999999999998, 2.9999999999999996, 4.9999999999999982, 7.9999999999999982, 12.999999999999998, 20.999999999999993, 33.999999999999986].
+
+      
