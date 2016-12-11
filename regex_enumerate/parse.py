@@ -1,6 +1,6 @@
 from re import compile
 
-x = compile(r'[^*()|]')
+x = compile(r'[^+*()|]')
 
 def parse_regex(re, stack):
     '''
@@ -9,7 +9,7 @@ def parse_regex(re, stack):
     stack = [alternates]
     alternates = ('|', concats)
     concats = ('.', atom)
-    atom = ('tok', character) or ('eps', '%') or ('*', alternates) or alternates
+    atom = ('tok', character) or ('eps', '%') or ('*', expr) or alternates
     A proof of correctness can be derived through structural induction on this data-scheme.
     '''
     if not re:
@@ -44,8 +44,14 @@ def parse_regex(re, stack):
         assert _ == '.'
         current_concat[-1] = ('*', current_concat[-1])
         return parse_regex(re[1:], stack)
+    elif re[0] == '+':
+        # e+ -> ('.', e, e*)
+        _, current_concat = alternates[-1]
+        assert _ == '.'
+        current_concat[-1] = ('.', [current_concat[-1], ('*', current_concat[-1])])
+        return parse_regex(re[1:], stack)
     else:
         raise NotImplementedError()
 
 def parse(re):
-    return parse_regex(re, [('|', [('.', [])])])
+    return parse_regex(re.replace(' ', ''), [('|', [('.', [])])])

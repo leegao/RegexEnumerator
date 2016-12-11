@@ -2,5 +2,5 @@ from regex_enumerate import enumerate_coefficients, exact_coefficients, generati
 from itertools import islice
 from sympy import latex
 
-print(list(islice(exact_coefficients("(00*1)*00*"), 10)))
-print(latex(generating_function("(00*1)*00*")))
+print(list(islice(exact_coefficients("(0+1)*0+"), 10)))
+print(latex(generating_function("(0+1)*0+")))
