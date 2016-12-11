@@ -79,7 +79,7 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   from regex_enumerate import enumerate_coefficients
   from itertools import islice
   
-  print(list(islice(enumerate_coefficients('(00+1)*00+'), 10)))
+  print(list(islice(enumerate_coefficients('(0+1)*0+'), 10)))
   # [0.0, 1.0, 0.99999999999999989, 1.9999999999999998, 2.9999999999999996, 4.9999999999999982, 7.9999999999999982, 12.999999999999998, 20.999999999999993, 33.999999999999986].
   ```
 
@@ -90,7 +90,7 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   from regex_enumerate import exact_coefficients
   from itertools import islice
   
-  print(list(islice(exact_coefficients('(00+1)*00+'), 10)))
+  print(list(islice(exact_coefficients('(0+1)*0+'), 10)))
   # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
   ```
 
@@ -100,7 +100,7 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   from regex_enumerate import algebraic_form, evaluate_expression
   from sympy import latex, pprint
   
-  formula = algebraic_form('(00*1)00*')
+  formula = algebraic_form('(0+1)0+')
   
   # Normal Form
   print(formula)
@@ -131,7 +131,7 @@ To see the generating function of a regular expression, try
 from regex_enumerate import generating_function
 from sympy import latex
 
-print(latex(generating_function("(00*1)*00*")))
+print(latex(generating_function("(0+1)*0+")))
 ```
 
 which outputs
