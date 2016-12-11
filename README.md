@@ -120,9 +120,30 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   # 8
   ```
 
-The magic behind this will be discussed in the next section. The <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c068b57af6b6fa949824f73dcb828783.svg?invert_in_darkmode" align=middle width=41.681475pt height=23.24256pt/> code looks like 
-<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2382f4301164b8719a1e94d28f7c7e73.svg?invert_in_darkmode" align=middle width=267.8313pt height=39.45249pt/></p>
-Note that this differs from the above since we're enumerating <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d2432a60d1dc5806cd53447ce48d2e43.svg?invert_in_darkmode" align=middle width=57.942225pt height=26.95407pt/> instead of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f9d2f9a74a3d1a9fc852220717fcbd49.svg?invert_in_darkmode" align=middle width=65.49939pt height=26.95407pt/>.
+  The magic behind this will be discussed in the next section. The <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c068b57af6b6fa949824f73dcb828783.svg?invert_in_darkmode" align=middle width=41.681475pt height=23.24256pt/> code looks like 
+  <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/1fc3c5fe30de9b941a91921b8527493b.svg?invert_in_darkmode" align=middle width=267.8313pt height=39.45249pt/></p>
+  Note that this differs from the above since we're enumerating <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d2432a60d1dc5806cd53447ce48d2e43.svg?invert_in_darkmode" align=middle width=57.942225pt height=26.95407pt/> instead of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f9d2f9a74a3d1a9fc852220717fcbd49.svg?invert_in_darkmode" align=middle width=65.49939pt height=26.95407pt/>.
+
+* `check_on_oeis`: This will search https://oeis.org for a potential combinatorial interpretation of your
+  enumeration.
+  
+  ```python
+  from regex_enumerate import check_on_oeis
+  sequences = check_on_oeis("(0+,)*0+", start=5)
+  for oeis in sequences:
+    print('%s: https://oeis.org/%s' % (oeis.name, oeis.id))
+
+  # Fibonacci numbers: https://oeis.org/A000045
+  # Pisot sequences E(3,5), P(3,5): https://oeis.org/A020701
+  # Expansion of (1-x)/(1-x-x^2): https://oeis.org/A212804
+  # Pisot sequence E(2,3): https://oeis.org/A020695
+  # Least k such that the maximum number of elements among the continued fractions for k/1, k/2, k/3, k/4 : https://oeis.org/A071679
+  # a(n) = Fibonacci(n) mod n^3: https://oeis.org/A132636
+  # Expansion of 1/(1 - x - x^2 + x^18 - x^20): https://oeis.org/A185357
+  # Nearly-Fibonacci sequence: https://oeis.org/A264800
+  # Pisot sequences E(5,8), P(5,8): https://oeis.org/A020712
+  # a(n) = s(1)t(n) + s(2)t(n-1) + : https://oeis.org/A024595
+  ```
 
 In addition, regular expressions correspond to the family of rational functions (quotient of two polynomials).
 To see the generating function of a regular expression, try

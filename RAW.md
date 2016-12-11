@@ -126,11 +126,32 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   # 8
   ```
 
-The magic behind this will be discussed in the next section. The $\text{\LaTeX}$ code looks like 
-$$
-2.0 \delta\left(n\right) + 1.0 \delta\left(n - 1\right) + {\binom{n + 1}{1}} - 3
-$$
-Note that this differs from the above since we're enumerating $(0^+1)0^+$ instead of $(0^+1)^* 0^+$.
+  The magic behind this will be discussed in the next section. The $\text{\LaTeX}$ code looks like 
+  $$
+  2.0 \delta\left(n\right) + 1.0 \delta\left(n - 1\right) + {\binom{n + 1}{1}} - 3
+  $$
+  Note that this differs from the above since we're enumerating $(0^+1)0^+$ instead of $(0^+1)^* 0^+$.
+
+* `check_on_oeis`: This will search https://oeis.org for a potential combinatorial interpretation of your
+  enumeration.
+  
+  ```python
+  from regex_enumerate import check_on_oeis
+  sequences = check_on_oeis("(0+,)*0+", start=5)
+  for oeis in sequences:
+    print('%s: https://oeis.org/%s' % (oeis.name, oeis.id))
+
+  # Fibonacci numbers: https://oeis.org/A000045
+  # Pisot sequences E(3,5), P(3,5): https://oeis.org/A020701
+  # Expansion of (1-x)/(1-x-x^2): https://oeis.org/A212804
+  # Pisot sequence E(2,3): https://oeis.org/A020695
+  # Least k such that the maximum number of elements among the continued fractions for k/1, k/2, k/3, k/4 : https://oeis.org/A071679
+  # a(n) = Fibonacci(n) mod n^3: https://oeis.org/A132636
+  # Expansion of 1/(1 - x - x^2 + x^18 - x^20): https://oeis.org/A185357
+  # Nearly-Fibonacci sequence: https://oeis.org/A264800
+  # Pisot sequences E(5,8), P(5,8): https://oeis.org/A020712
+  # a(n) = s(1)t(n) + s(2)t(n-1) + : https://oeis.org/A024595
+  ```
 
 In addition, regular expressions correspond to the family of rational functions (quotient of two polynomials).
 To see the generating function of a regular expression, try
