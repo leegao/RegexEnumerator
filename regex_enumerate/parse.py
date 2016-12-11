@@ -1,6 +1,6 @@
 from re import compile
 
-x = compile(r'[^+*()|]')
+x = compile(r'[^?+*()|]')
 
 def parse_regex(re, stack):
     '''
@@ -49,6 +49,12 @@ def parse_regex(re, stack):
         _, current_concat = alternates[-1]
         assert _ == '.'
         current_concat[-1] = ('.', [current_concat[-1], ('*', current_concat[-1])])
+        return parse_regex(re[1:], stack)
+    elif re[0] == '?':
+        # e? -> (e | %)
+        _, current_concat = alternates[-1]
+        assert _ == '.'
+        current_concat[-1] = ('|', [current_concat[-1], ('eps', '%')])
         return parse_regex(re[1:], stack)
     else:
         raise NotImplementedError()
