@@ -1,27 +1,51 @@
-from parsy import generate, string, regex, success
+from re import compile
 
-x = regex(r'[^%*()|]')
+x = compile(r'[^*()|]')
 
-
-@generate
-def e2():
-    c = yield (string('%').map(lambda c: ('eps', c)) | x.map(lambda c: ('tok', c)) | (string('(') >> e << string(')')))
-    star = yield string('*').at_most(1)
-    raise StopIteration(c if not star else ('*', c))
-
-
-@generate
-def e1():
-    concats = yield e2.at_least(1)
-    raise StopIteration(('.', concats))
-
-
-@generate
-def e():
-    left = yield e1
-    right = yield (string('|') >> e1).many()
-    raise StopIteration(('|', [left] + right))
-
+def parse_regex(re, stack):
+    '''
+    Rather than using a LL1 derivation, we will instead depend on traditional Shunting-Yards
+    using three stacks to build the tree.
+    stack = [alternates]
+    alternates = ('|', concats)
+    concats = ('.', atom)
+    atom = ('tok', character) or ('eps', '%') or ('*', alternates) or alternates
+    A proof of correctness can be derived through structural induction on this data-scheme.
+    '''
+    if not re:
+        assert len(stack) == 1
+        return stack[-1]
+    _, alternates = stack[-1] # stack of alternates
+    assert _ == '|'
+    if x.match(re):
+        curr, re = re[0], re[1:]
+        _, current_concat = alternates[-1]
+        assert _ == '.'
+        current_concat.append(('tok' if curr != '%' else 'eps', curr))
+        return parse_regex(re, stack)
+    elif re[0] == '(':
+        # push onto stack
+        stack.append(('|', [('.', [])]))
+        return parse_regex(re[1:], stack)
+    elif re[0] == ')':
+        # pop from stack
+        group = stack.pop(-1)
+        _, alternates = stack[-1]
+        assert _ == '|'
+        _, current_concat = alternates[-1]
+        assert _ == '.'
+        current_concat.append(group)
+        return parse_regex(re[1:], stack)
+    elif re[0] == '|':
+        alternates.append(('.', []))
+        return parse_regex(re[1:], stack)
+    elif re[0] == '*':
+        _, current_concat = alternates[-1]
+        assert _ == '.'
+        current_concat[-1] = ('*', current_concat[-1])
+        return parse_regex(re[1:], stack)
+    else:
+        raise NotImplementedError()
 
 def parse(re):
-    return e.parse(re.replace(' ', ''))
+    return parse_regex(re, [('|', [('.', [])])])
