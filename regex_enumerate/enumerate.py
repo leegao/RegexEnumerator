@@ -9,6 +9,8 @@ from sympy import nsimplify, sympify, binomial, DiracDelta
 
 from regex_enumerate.transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term
 
+from itertools import islice
+
 
 def exact(regex, n, what = None, use_overflow = True):
     '''
@@ -223,8 +225,27 @@ def generating_function(regex, what = None, threshold = 1e-3):
 def evaluate_expression(expr, n):
     return expr.subs('n', n).subs(DiracDelta(0), 1)
 
+
+def check_on_oeis(regex, what = None, start = 0, window = 10):
+    started = False
+    first = start
+    sequence = []
+    for i, count in enumerate(exact_coefficients(regex, what)):
+        if i < start: continue
+        # remove prefixes of zeroes
+        if not started and count is 0: continue
+        if not started:
+            started = True
+            first = i
+        if i - first > window: break
+        sequence.append(count)
+    try:
+        import pyoeis
+    except NameError:
+        raise NotImplementedError("Cannot find pyoeis. Make sure that it is installed.")
+    return pyoeis.OEISClient().lookup_by_terms(sequence, max_seqs=20)
+
 if __name__ == '__main__':
-    from itertools import islice
     from sympy import latex
 
     regexes = [

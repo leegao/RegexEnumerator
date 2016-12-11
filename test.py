@@ -1,3 +1,4 @@
+from regex_enumerate import check_on_oeis
 from regex_enumerate import enumerate_coefficients, exact_coefficients, generating_function, algebraic_form
 from itertools import islice
 from sympy import latex
@@ -16,7 +17,11 @@ regexes = [
 for regex, comment in regexes:
     print("* `%s`: %s\n" % (regex, comment))
     algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 20))
+    formula = algebraic_form(regex)
     print("  Its generating function is\n  $$\n  %s\n  $$" % latex(generating_function(regex)))
     print("  For words of sizes up to 20 in this language, their counts are:\n\n      %s\n" % (', '.join(map(str, algebraic))))
-    print("  Its closed form is\n  $$\n  %s\n  $$" % latex(algebraic_form(regex)))
-    print()
+    print("  Its closed form is\n  $$\n  %s\n  $$" % latex(formula))
+    print("\n  A list of OEIS entries that contains this subsequence.\n")
+    for oeis in check_on_oeis(regex, start=5):
+        print("  1. %s: https://oeis.org/%s" % (oeis.name, oeis.id))
+    print('')
