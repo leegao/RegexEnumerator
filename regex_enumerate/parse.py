@@ -1,4 +1,4 @@
-from parsy import generate, string, regex
+from parsy import generate, string, regex, success
 
 x = regex(r'[^%*()|]')
 
@@ -7,20 +7,20 @@ x = regex(r'[^%*()|]')
 def e2():
     c = yield (string('%').map(lambda c: ('eps', c)) | x.map(lambda c: ('tok', c)) | (string('(') >> e << string(')')))
     star = yield string('*').at_most(1)
-    return c if not star else ('*', c)
+    raise StopIteration(c if not star else ('*', c))
 
 
 @generate
 def e1():
     concats = yield e2.at_least(1)
-    return ('.', concats)
+    raise StopIteration(('.', concats))
 
 
 @generate
 def e():
     left = yield e1
     right = yield (string('|') >> e1).many()
-    return ('|', [left] + right)
+    raise StopIteration(('|', [left] + right))
 
 
 def parse(re):
