@@ -16,10 +16,8 @@ Have you ever wondered about how many different strings you can form that fits y
 
 Yeah, chances are you probably haven't. But it's on your mind now.
 
-Here's one of my favorite regexes:
-
-    (0+, )*0+
-    
+Here's one of my favorite regular expressions:
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/120bcbe220479f3fb301392b145130a5.svg?invert_in_darkmode" align=middle width=65.09151pt height=18.020145pt/></p>
 It specifies the class of languages that are comma-separated list of strings of zeros. For example,
 `000, 0, 00000` belongs to this language, but `0,,0` and `0,0,` does not.
 
@@ -29,15 +27,16 @@ strings, and so on. This pattern actually looks like
 
     0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, ...
 
-"Why, that is the fibonacci sequence! How did it end up in such a mundane place?"
+Why, that is the fibonacci sequence! How did it end up in such a mundane place?
 
 Now, I could give you a combinatorial interpretation for this amazeballs result, but I still get shivers up my spine
 whenever I think back to my undergrad Combinatorics course. Instead, I'll give a more general way to compute these
 enumerations.
 
-However, that's not the end of it. It turns out that this algorithm can also compute a closed-form expression
+However, that's not the end of it. It turns out that this algorithm can also compute a closed-form formula
 for this sequence.
-<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ed522eedb3660b291b47e81f834440d8.svg?invert_in_darkmode" align=middle width=472.60785pt height=52.667175pt/></p>
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c709d2b386c7588133c620efa335e165.svg?invert_in_darkmode" align=middle width=514.0443pt height=52.667175pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c9c53a99901c4a67544997f70b0f01bc.svg?invert_in_darkmode" align=middle width=18.19125pt height=23.24256pt/> is the number of comma-separated lists of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/>.
 
 Now, this might not look very pretty, but it's still pretty cool that there is a (computable) closed form expression that
 counts every regular expression.
@@ -54,17 +53,17 @@ linear equations and to translate numerically computed roots into algebraic form
 
 #### Regular Expression Syntax
 
-We are using vanilla regular expression. You can't use the + operator or the ? operator, but you can always encode
-these operators as follows.
+We are using vanilla regular expression, so the standard `*`, `+`, `?`, `|` variety. Note that for `+` and `?`, we've
+encoded them using just `*` and `|` instead:
 
-* <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/af1c832a7b0568f7106622bd1c34e380.svg?invert_in_darkmode" align=middle width=77.54802pt height=26.95407pt/>
-* <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9c40d61f55391df9c3e110074bf2e876.svg?invert_in_darkmode" align=middle width=88.31856pt height=25.43409pt/>
+* <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b44b0a181653840433cbcd08a7638cb7.svg?invert_in_darkmode" align=middle width=78.053415pt height=13.9105725pt/></p>
+* <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/197232bbcfbca260e636689189e10f3b.svg?invert_in_darkmode" align=middle width=88.823955pt height=16.438356pt/></p>
 
 Here, `%` denotes the "empty" transition <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.1668915pt height=14.93184pt/> in formal languages. In effect, it acts as the
 identity element of concatenation, so that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ffbd759215219ed839b38b1f27aedd2f.svg?invert_in_darkmode" align=middle width=58.917705pt height=15.38856pt/>. For example, the regular expression of
 comma delimited language <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4052b2961cf5ab33404b96cd5e12aae9.svg?invert_in_darkmode" align=middle width=71.423715pt height=26.95407pt/> can be encoded as
 ```python
-e = 'some regular expression'
+e = '0' # or any other regular expression
 regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
 ```
 
