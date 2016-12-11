@@ -3,8 +3,12 @@
 Enumerate Regular Expressions the Fun Way.
 
 $$
-[z^n] \frac{p(z)}{q(z)} = \Theta({n + k - 1 \choose k - 1}\rho^{-n}) ~~~ \text{where $\rho$ is the smallest root of $q(z)$, and $k$ its multiplicity.}
+[z^n] \frac{p(z)}{q(z)} = \Theta\left({n + k - 1 \choose k - 1}\rho^{-n}\right) ~~~ \text{where $\rho$ is the smallest root of $q(z)$, and $k$ its multiplicity.}
 $$
+
+<p align="center">
+<img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
+</p>
 
 <sub>*Or how I learned to stop worrying and start counting things with calculus*</sub>
 
@@ -120,12 +124,27 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   print(evaluate_expression(formula, 10))
   # 8
   ```
-  
+
 The magic behind this will be discussed in the next section. The $\text{\LaTeX}$ code looks like 
 $$
 2.0 \delta\left(n\right) + 1.0 \delta\left(n - 1\right) + {\binom{n + 1}{1}} - 3
 $$
 Note that this differs from the above since we're enumerating $(0^+1)0^+$ instead of $(0^+1)^* 0^+$.
+
+In addition, regular expressions correspond to the family of rational functions (quotient of two polynomials).
+To see the generating function of a regular expression, try
+
+```python
+from regex_enumerate import generating_function
+from sympy import latex
+
+print(latex(generating_function("(00*1)*00*")))
+```
+
+which outputs
+$$
+\frac{1.0 z}{- 1.0 z^{2} - 1.0 z + 1.0}
+$$
 
 #### Caveat
 

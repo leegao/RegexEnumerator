@@ -2,7 +2,11 @@
 
 Enumerate Regular Expressions the Fun Way.
 
-<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3be5b46356ad1be74d4b8030a050c49d.svg?invert_in_darkmode" align=middle width=655.4196pt height=39.45249pt/></p>
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/aa4d414dd40b418624756ba65b24c190.svg?invert_in_darkmode" align=middle width=672.31395pt height=39.45249pt/></p>
+
+<p align="center">
+<img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
+</p>
 
 <sub>*Or how I learned to stop worrying and start counting things with calculus*</sub>
 
@@ -116,10 +120,23 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   print(evaluate_expression(formula, 10))
   # 8
   ```
-  
+
 The magic behind this will be discussed in the next section. The <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c068b57af6b6fa949824f73dcb828783.svg?invert_in_darkmode" align=middle width=41.681475pt height=23.24256pt/> code looks like 
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2382f4301164b8719a1e94d28f7c7e73.svg?invert_in_darkmode" align=middle width=267.8313pt height=39.45249pt/></p>
 Note that this differs from the above since we're enumerating <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d2432a60d1dc5806cd53447ce48d2e43.svg?invert_in_darkmode" align=middle width=57.942225pt height=26.95407pt/> instead of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f9d2f9a74a3d1a9fc852220717fcbd49.svg?invert_in_darkmode" align=middle width=65.49939pt height=26.95407pt/>.
+
+In addition, regular expressions correspond to the family of rational functions (quotient of two polynomials).
+To see the generating function of a regular expression, try
+
+```python
+from regex_enumerate import generating_function
+from sympy import latex
+
+print(latex(generating_function("(00*1)*00*")))
+```
+
+which outputs
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2f5a67f61cf674ae11beb062c1f892d6.svg?invert_in_darkmode" align=middle width=140.091435pt height=34.360095pt/></p>
 
 #### Caveat
 

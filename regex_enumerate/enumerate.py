@@ -174,7 +174,7 @@ def extract_coefficients_algebraically(regex, what = None, threshold = 1e-3):
         # A function that computes the coefficient for n
         (lambda n: abs(basis(n).dot(partial_coefficients)) + (overflow[n] if n in overflow else 0)),
         # internal states to reconstruct the closed form enumeration
-        (dict(clusters), basis, partial_coefficients, polynomial, overflow)
+        (dict(clusters), basis, partial_coefficients, polynomial, (overflow, (top, bottom)))
     )
 
 
@@ -197,7 +197,8 @@ def inverse_symbolic(n, threshold=1e-5):
 
 
 def algebraic_form(regex, what = None, threshold = 1e-3):
-    _, (clusters, basis, partial_coefficients, bottom, overflow) = extract_coefficients_algebraically(regex, what, threshold)
+    _, (clusters, basis, partial_coefficients, bottom, (overflow, (top, bottom))) = \
+        extract_coefficients_algebraically(regex, what, threshold)
     n = sympify('n')
     series = 0
     for i, (root, k) in enumerate(collate(clusters)):
@@ -207,6 +208,16 @@ def algebraic_form(regex, what = None, threshold = 1e-3):
     for k, coefficient in overflow.items():
         series += coefficient * DiracDelta(n - k)
     return series
+
+
+def generating_function(regex, what = None, threshold = 1e-3):
+    _, (clusters, basis, partial_coefficients, bottom, (overflow, (top, bottom))) = \
+        extract_coefficients_algebraically(regex, what, threshold)
+    z = sympify('z')
+    quotient = sum(c * z**k for (k, c) in overflow.items())
+    p = sum(c * z**k for (k, c) in top.items())
+    q = sum(c * z**k for (k, c) in bottom.items())
+    return quotient + p/q
 
 
 def evaluate_expression(expr, n):
