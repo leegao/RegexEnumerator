@@ -160,7 +160,7 @@ def mul(v1, v2):
 def process(p):
     q = {}
     for key, val in p.items():
-        if val:
+        if val and abs(val) > 1e-10:
             q[key] = val
     return q
 

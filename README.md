@@ -149,3 +149,68 @@ in this language.
 There are ways to circumvent this, but I haven't gotten around to tackling this problem yet. Therefore, know that
 for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
 There is always a way to do this, though it might create an exponential number of additional states.
+
+#### Additional Examples
+* `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/1123f13a5cf59d4870e9a7320d2f869e.svg?invert_in_darkmode" align=middle width=127.30608pt height=34.360095pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      1, 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4ce1b82d1485300e9111c68da61e077b.svg?invert_in_darkmode" align=middle width=501.83265pt height=52.667175pt/></p>
+
+* `(%|1|11)(00*(1|11))*0* | 1`: complete 1 or 11-separated strings
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b8aeb10e24f0dcd276ca81740fa7667f.svg?invert_in_darkmode" align=middle width=248.3646pt height=37.147275pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      1, 3, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705, 3136, 5768, 10609, 19513, 35890, 66012, 121415
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/024a6cd2f5d2a9090ad4da3705edb0b6.svg?invert_in_darkmode" align=middle width=1286.4951pt height=19.789935pt/></p>
+
+* `(000)*(111)*(22)*(33)*(44)*`: complex root to (1 - z**3)**-2 * (1 - z**2)**-3
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/744d2e9b7793e8d7eeebd74a206f57ed.svg?invert_in_darkmode" align=middle width=558.4359pt height=34.360095pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      1, 0, 3, 2, 6, 6, 13, 12, 24, 24, 39, 42, 63, 66, 96, 102, 138, 150, 196, 210
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/e3e434f9f80fd7bd07e85029a3b48196.svg?invert_in_darkmode" align=middle width=2908.026pt height=42.804135pt/></p>
+
+* `1*(22)*(333)*(4444)*(55555)*`: number of ways to make change give coins of denomination 1 2 3 4 and 5
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/88cc6eed2a47cad72b2f75df37e3223f.svg?invert_in_darkmode" align=middle width=677.8431pt height=34.360095pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      1, 1, 2, 3, 5, 7, 10, 13, 18, 23, 30, 37, 47, 57, 70, 84, 101, 119, 141, 164
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a2d29ceab49c773111de5872c5afe7ee.svg?invert_in_darkmode" align=middle width=4482.1095pt height=59.178735pt/></p>
+
+* `11* 22* 33* 44* 55*`: 5 compositions of n
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2478a0938079a952ba396709115a9a3c.svg?invert_in_darkmode" align=middle width=419.4267pt height=37.147275pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      0, 0, 0, 0, 0, 1, 5, 15, 35, 70, 126, 210, 330, 495, 715, 1001, 1365, 1820, 2380, 3060
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/7e7aeb9917c208bc8ac08bbf703d1ff9.svg?invert_in_darkmode" align=middle width=466.39395pt height=39.45249pt/></p>
+
+* `(11*)*`: all compositions of n
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/aec8780df1f8cf1561a4af35a738592a.svg?invert_in_darkmode" align=middle width=126.32202pt height=34.360095pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      1, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9d2cd0af8c8bd1f4a588934cfc61fddc.svg?invert_in_darkmode" align=middle width=118.418685pt height=32.9901pt/></p>
+
+* `(.........................)* (..........)* (.....)* (.)*`: number of ways to make n cents with US coins.
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/db2edcc857a1573432da15c9c6371800.svg?invert_in_darkmode" align=middle width=944.8296pt height=34.360095pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 6, 6, 6, 6, 6
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9c329eacacd565a206f02bc5bbe8179f.svg?invert_in_darkmode" align=middle width=21417.99pt height=59.178735pt/></p>
+
+* `(00*1)*00*`: list of 0-sequences
+  Its generating function is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/dff15208c98f51e2b1f62cf27a693988.svg?invert_in_darkmode" align=middle width=140.091435pt height=34.360095pt/></p>
+  For words of sizes up to 20 in this language, their counts are:
+
+      0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181
+
+  Its closed form is <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/841cce6bf5f0f977e25c033bc101dd71.svg?invert_in_darkmode" align=middle width=472.60785pt height=52.667175pt/></p>
