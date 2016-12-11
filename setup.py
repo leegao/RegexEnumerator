@@ -15,6 +15,7 @@ setup(name='regex_enumerate',
       ],
       keywords='regular expression combinatorics',
       install_requires=[
+          'scipy',
           'sympy',
           'numpy',
           'pyoeis'
