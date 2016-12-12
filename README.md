@@ -12,16 +12,19 @@ Enumerate Regular Expressions the Fun Way.
 
 -----
 
-Table of Contents
-=================
+### Table of Contents
 
 * [Regex Enumerator](#regex-enumerator)
+     * [Table of Contents](#table-of-contents)
      * [Installation](#installation)
      * [Usage](#usage)
         * [Regular Expression Syntax](#regular-expression-syntax)
         * [Library Functions](#library-functions)
         * [Caveat](#caveat)
+     * [Justification](#justification)
+        * [Fibonacci Redux](#fibonacci-redux)
      * [Additional Examples](#additional-examples)
+
 
 -----
 
@@ -240,6 +243,98 @@ that this is correct. Therefore, know that
 for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
 There is always a way to do this, though it might create an exponential number of additional states.
 
+### Justification
+
+Now, all of this might feel a little bullshitty. (Shameless plug, for more bullshitty math, check out http://bullshitmath.lol)
+Is there any real justification for what you are doing here? Am I just enumerating a bunch of pre-existing cases
+and running through a giant table lookup?
+
+Well, it's actually a lot simpler than that. However, there's a bit of a setup for the problem.
+
+#### Fibonacci Redux
+
+Let's rewind back to our first example; that of enumerating comma-separated sequences of `x`es:
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c6281cf4f962d25fbc36c57ce7850bbf.svg?invert_in_darkmode" align=middle width=109.31118pt height=16.438356pt/></p>
+We've seen above that this follows a fibonacci-like sequence. Is there some-way that we can derive this
+fact without brute-force enumeration?
+
+Let's start with the sequence of `x`es: <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4522248e54d76be0a26031c14eeb96a9.svg?invert_in_darkmode" align=middle width=17.108685pt height=16.07364pt/>. This language, in an infinitely expanded form, looks like
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3381c5da3dc46afe9e4deb717a7f6664.svg?invert_in_darkmode" align=middle width=175.8834pt height=16.438356pt/></p>
+
+Now, here's a trick. Let's pretend that our bar (<img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/57fe5a91a139252a27ed191b2680eda7.svg?invert_in_darkmode" align=middle width=4.0607325pt height=25.43409pt/>) is a plus sign (<img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/df33724455416439909c33a7db76b2bc.svg?invert_in_darkmode" align=middle width=12.27996pt height=19.95477pt/>), so that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/e6a8413df070790dcc80a7af6dc4e05b.svg?invert_in_darkmode" align=middle width=201.4551pt height=13.511025pt/></p>
+
+This looks remarkably familiar. In fact, if you are working within a numerical field, then a little bit of
+precalculus would also show that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a48f22fd8de4155848bc1a018da8b40e.svg?invert_in_darkmode" align=middle width=225.72825pt height=34.360095pt/></p>
+
+Could there be some connection here? Well, let's find out. To do this, let's equate the two expressions:
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/bf7e136f136c7efe33bc173e1bf1a070.svg?invert_in_darkmode" align=middle width=484.71555pt height=34.360095pt/></p>
+so <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/fe2120e91ad08218bdfb64ad6b47fa90.svg?invert_in_darkmode" align=middle width=36.303795pt height=21.96381pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6b424929bb1a83860737d2188f80b16f.svg?invert_in_darkmode" align=middle width=64.617795pt height=28.55226pt/> if we pretend that each regular expression has a numerical value.
+
+In fact, this works for every regular expression. For any regular expressions <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/49f3694ae5275a3e33da3e17e4dd9528.svg?invert_in_darkmode" align=middle width=36.03567pt height=14.93184pt/> and for any letters <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6ecf10ed1c08ba92db30119ef192228f.svg?invert_in_darkmode" align=middle width=40.51806pt height=14.93184pt/> we have
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5f1add925794ecf4a2957a175b9ee8cc.svg?invert_in_darkmode" align=middle width=114.99972pt height=131.41953pt/></p>
+As long as you don't need to invoke the axiom of multiplicative-commutativity, this reduction works.
+
+For example, for the comma-separated list example, we have
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/52d12c6130dc0b733e761d30072694e5.svg?invert_in_darkmode" align=middle width=241.30095pt height=84.50739pt/></p>
+
+Note here that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/497403162f282a343c315086f75ba766.svg?invert_in_darkmode" align=middle width=4.0607325pt height=14.93184pt/> is a variable! It might be tempting to try to simplify this further. Letting <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2404d424965cf131c13c2080768326c8.svg?invert_in_darkmode" align=middle width=11.043285pt height=14.93184pt/> denote the comma, 
+we might try
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d8c119d2514099b760bc51bb48b0e9fd.svg?invert_in_darkmode" align=middle width=260.3436pt height=84.74664pt/></p>
+
+But this requires a crucial axiom that we do not have:
+
+* We do not have multiplicative commutativity, so we couldn't merge <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/080bdd9337021a90b67fc7ed0a645b6e.svg?invert_in_darkmode" align=middle width=103.39791pt height=28.55226pt/>, since 
+  no longer know whether this is <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5a43d840c0717ad3ba88234ef1d697fb.svg?invert_in_darkmode" align=middle width=55.234245pt height=28.55226pt/> or <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/76f426704274ce73132925d7690385b3.svg?invert_in_darkmode" align=middle width=55.22682pt height=28.55226pt/>.
+[](
+This begs a natural question. If we can't take inverses or negate things, then why do we admit the expression <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3f332093a7dbcc97f190d6d57fa8d322.svg?invert_in_darkmode" align=middle width=23.768085pt height=28.55226pt/>?
+Well, in this language, that term is **atomic**. Therefore, we cannot break it down and look at it as a subtraction followed by
+an inverse; it is just <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/982c522bfaa34942669aa7ebd7bbdca3.svg?invert_in_darkmode" align=middle width=23.768085pt height=28.55226pt/>. I'll clear this up later.
+)
+
+Now that we have this weird "compiler" taking us from regular expressions to numerical formulas, can you tell us what it means
+for a regular expression to take a numerical value?
+
+The answer: none. There is no meaning to assign a value of say <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/22f2e6fc19e491418d1ec4ee1ef94335.svg?invert_in_darkmode" align=middle width=20.499105pt height=21.96381pt/> to <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/332cc365a4987aacce0ead01b8bdcc0b.svg?invert_in_darkmode" align=middle width=8.88954pt height=14.93184pt/>, or that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3f6a01eca3b8d6c424522f2e11ccb80e.svg?invert_in_darkmode" align=middle width=58.623015pt height=23.41515pt/>. It doesn't mean anything, 
+it's just pure gibberish. Don't do it, except maybe values of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/29632a9bf827ce0200454dd32fc3be82.svg?invert_in_darkmode" align=middle width=7.713717pt height=21.96381pt/> or <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/034d0a6be0424bffe9a6e7ac9236c0f5.svg?invert_in_darkmode" align=middle width=7.713717pt height=21.96381pt/>; we'll get to that later.
+
+Okay. So why did we go on this wild goose-hunt if their values don't even mean anything? 
+It turns out that the value of a formula is not what we are interested in; these objects are compact and have nice algebraic properties.
+When we count things, we just care about how many objects there are that satisfies a certain property.
+When we count all words of, say, size 5 in a language, we don't care whether these strings are `000,0` or `0,0,0`. The ordering
+of the letters in these strings are extraneous details that we no longer care about. Therefore, it would be nice to be able to
+forget these details. More formally, if the order of letters in a word doesn't matter, we would say that
+*we want the concatenation operator to be commutative*. If there's a representational equivalence to the numerical "field",
+then the translation would be that *we want the multiplication operator to be commutative.*
+
+This is a huge game-changer. In the above example, we weren't able to fully simplify that ugly product of fractions precisely
+because we lacked this crucial axiom. Luckily for us, it now allows us to fully simplify the expression
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b5a38b664b97b87056dd23d6d12873bf.svg?invert_in_darkmode" align=middle width=196.581pt height=34.177275pt/></p>
+Which tells us that our regular expression is isomorphic to the regular expression <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/82bb6a5e8e09489f748ec969fe5190f4.svg?invert_in_darkmode" align=middle width=69.026265pt height=25.43409pt/>. That is, for each
+comma-separated list, you can map it to one of the words in <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/82bb6a5e8e09489f748ec969fe5190f4.svg?invert_in_darkmode" align=middle width=69.026265pt height=25.43409pt/>. In fact, not only are these two languages
+isomorphic; they are the same! A moment of thought reveals that this new regular expression also matches only comma-separated list
+of sequences as well.
+
+That's a pretty cool trick to deduce equivalences between regular expressions, but is that all there is to it?
+
+It turns out that each of these translated numerical expressions also admit an infinite series expansion (in terms of its free variables). So
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/0f96f40aed211541cae40f311b924b63.svg?invert_in_darkmode" align=middle width=459.71805pt height=34.177275pt/></p>
+and in general, we have the multivariable expansion
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ac3262648c32411a072d132fd3c8085f.svg?invert_in_darkmode" align=middle width=341.8173pt height=40.54809pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/0aae089ed20772138e327117bd8c6bac.svg?invert_in_darkmode" align=middle width=12.834525pt height=14.93184pt/> is the coefficient attached to the <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/1949bc43d509deddd1ed78695ad786ff.svg?invert_in_darkmode" align=middle width=66.720555pt height=30.61674pt/> term.
+
+However, recall that each of the <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/1abf06af410e5fda80c06d2b5d246d77.svg?invert_in_darkmode" align=middle width=133.7292pt height=22.61622pt/> corresponds to exactly one of
+the words in our language. Therefore, if there are 5 words of size 6 with just one comma in our language, the coefficient in front
+of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/60406b22dbf1f8660041fb24bb74e5e1.svg?invert_in_darkmode" align=middle width=31.184175pt height=27.5385pt/> in the series expansion must be 5.
+
+Herein lies the key to our approach. Once we grant the freedom of commutativity, each of these regular expressions "generates"
+a numerical function with some infinite series expansion. The coefficients of the <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/1a1ddd375cabb38c3e605c08d7df4181.svg?invert_in_darkmode" align=middle width=49.69437pt height=31.80408pt/> term in this
+expansion is then the total count of all objects in this regular language that has `i` <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/e714a3139958da04b41e3e607a544455.svg?invert_in_darkmode" align=middle width=15.44202pt height=14.93184pt/>s, `j` <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/277fbbae7d4bc65b6aa601ea481bebcc.svg?invert_in_darkmode" align=middle width=15.44202pt height=14.93184pt/>s, and `k` <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/95d239357c7dfa2e8d1fd21ff6ed5c7b.svg?invert_in_darkmode" align=middle width=15.44202pt height=14.93184pt/>s.
+
+This approach is called the generating function approach within elementary combinatorics. It is a powerful idea to create
+these compact analytical (if a bit nonsensical) representations of your combinatorial objects of interest in order to
+use more powerful analytical tools to find properties about them.
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 

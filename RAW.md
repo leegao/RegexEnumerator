@@ -14,16 +14,19 @@ $$
 
 -----
 
-Table of Contents
-=================
+### Table of Contents
 
 * [Regex Enumerator](#regex-enumerator)
+     * [Table of Contents](#table-of-contents)
      * [Installation](#installation)
      * [Usage](#usage)
         * [Regular Expression Syntax](#regular-expression-syntax)
         * [Library Functions](#library-functions)
         * [Caveat](#caveat)
+     * [Justification](#justification)
+        * [Fibonacci Redux](#fibonacci-redux)
      * [Additional Examples](#additional-examples)
+
 
 -----
 
@@ -291,7 +294,7 @@ x^* = \epsilon + x + xx + xxx + \cdots ~~~ \equiv ~~~ 1 + x + xx + xxx + \cdots 
 $$
 so $\epsilon \equiv 1$ and $x^* \equiv \frac{1}{1 - x}$ if we pretend that each regular expression has a numerical value.
 
-In fact, this works for every regular expression. For any regular expression $e_0$ and $e_1$, we have
+In fact, this works for every regular expression. For any regular expressions $e_0, e_1$ and for any letters $x, y, z$ we have
 \begin{align*}
 \epsilon &\equiv 1 \\
 x, y, z &\equiv x, y, z \\
@@ -300,6 +303,78 @@ e_0 \mid e_1 &\equiv e_0 + e_1 \\
 e^* &\equiv \frac{1}{1 - e}
 \end{align*}
 As long as you don't need to invoke the axiom of multiplicative-commutativity, this reduction works.
+
+For example, for the comma-separated list example, we have
+\begin{align*}
+(xx^*,)^*xx^* &\equiv \frac{1}{1 - (xx^*,)}xx^* \\
+&\equiv \frac{1}{1 - (x\frac{1}{1 - x},)} x \frac{1}{1 - x}
+\end{align*}
+
+Note here that $,$ is a variable! It might be tempting to try to simplify this further. Letting $z_{,}$ denote the comma, 
+we might try
+\begin{align*}
+\frac{1}{1 - (x\frac{1}{1 - x}z_{,})} x \frac{1}{1 - x} &= \frac{\frac{x}{1 - x}}{\frac{1 - x}{1 - x} - \frac{xz_{,}}{1 - x}} \\
+&= \frac{x}{(1 - x) - xz_{,}}
+\end{align*}
+
+But this requires a crucial axiom that we do not have:
+
+* We do not have multiplicative commutativity, so we couldn't merge $\frac{1}{1 - x}\times x \ne \frac{x}{1 - x}$, since 
+  no longer know whether this is $x \times \frac{1}{1 - x}$ or $\frac{1}{1 - x} \times x$.
+[](
+This begs a natural question. If we can't take inverses or negate things, then why do we admit the expression $\frac{1}{1 - x}$?
+Well, in this language, that term is **atomic**. Therefore, we cannot break it down and look at it as a subtraction followed by
+an inverse; it is just $\frac{1}{1-x}$. I'll clear this up later.
+)
+
+Now that we have this weird "compiler" taking us from regular expressions to numerical formulas, can you tell us what it means
+for a regular expression to take a numerical value?
+
+The answer: none. There is no meaning to assign a value of say $0.1$ to $x$, or that $y^* = 0.2$. It doesn't mean anything, 
+it's just pure gibberish. Don't do it, except maybe values of $0$ or $1$; we'll get to that later.
+
+Okay. So why did we go on this wild goose-hunt if their values don't even mean anything? 
+It turns out that the value of a formula is not what we are interested in; these objects are compact and have nice algebraic properties.
+When we count things, we just care about how many objects there are that satisfies a certain property.
+When we count all words of, say, size 5 in a language, we don't care whether these strings are `000,0` or `0,0,0`. The ordering
+of the letters in these strings are extraneous details that we no longer care about. Therefore, it would be nice to be able to
+forget these details. More formally, if the order of letters in a word doesn't matter, we would say that
+*we want the concatenation operator to be commutative*. If there's a representational equivalence to the numerical "field",
+then the translation would be that *we want the multiplication operator to be commutative.*
+
+This is a huge game-changer. In the above example, we weren't able to fully simplify that ugly product of fractions precisely
+because we lacked this crucial axiom. Luckily for us, it now allows us to fully simplify the expression
+$$
+(xx^*,)^*xx^* \equiv \frac{x}{(1 - x) - xz_{,}}
+$$
+Which tells us that our regular expression is isomorphic to the regular expression $(x \mid x,)^*x$. That is, for each
+comma-separated list, you can map it to one of the words in $(x \mid x,)^*x$. In fact, not only are these two languages
+isomorphic; they are the same! A moment of thought reveals that this new regular expression also matches only comma-separated list
+of sequences as well.
+
+That's a pretty cool trick to deduce equivalences between regular expressions, but is that all there is to it?
+
+It turns out that each of these translated numerical expressions also admit an infinite series expansion (in terms of its free variables). So
+$$
+\frac{x}{(1 - x) - xz_{,}} = a_{0,0} + a_{0, 1} z_{,}^1 + a_{1, 0} x^1 + a_{1, 1} x^1 z_{,}^1 + a{0, 2} z{,}^2 + \cdots
+$$
+and in general, we have the multivariable expansion
+$$
+f(x_0, x_1, \dots, x_n) = \sum_{(i_0, \dots, i_n) \in \mathbb{N}^n} a_{i_0, \dots, i_n} x_0^{i_0} \cdots x_n^{i_n}
+$$
+where $a_{i}$ is the coefficient attached to the $x_0^{i_0} \cdots x_n^{i_n}$ term.
+
+However, recall that each of the $x^uz_{,}^v = x\stackrel{u}{\dots} x,\stackrel{v}{\dots},$ corresponds to exactly one of
+the words in our language. Therefore, if there are 5 words of size 6 with just one comma in our language, the coefficient in front
+of $x^5z_{,}^1$ in the series expansion must be 5.
+
+Herein lies the key to our approach. Once we grant the freedom of commutativity, each of these regular expressions "generates"
+a numerical function with some infinite series expansion. The coefficients of the $x_0^{i} x_1^{j} x_2^{k}$ term in this
+expansion is then the total count of all objects in this regular language that has `i` $x_0$s, `j` $x_1$s, and `k` $x_2$s.
+
+This approach is called the generating function approach within elementary combinatorics. It is a powerful idea to create
+these compact analytical (if a bit nonsensical) representations of your combinatorial objects of interest in order to
+use more powerful analytical tools to find properties about them.
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
