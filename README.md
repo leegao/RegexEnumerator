@@ -15,15 +15,13 @@ Enumerate Regular Expressions the Fun Way.
 Table of Contents
 =================
 
-   * [Regex Enumerator](#regex-enumerator)
-         * [Installation](#installation)
-         * [Usage](#usage)
-            * [Regular Expression Syntax](#regular-expression-syntax)
-            * [Library Functions](#library-functions)
-            * [Caveat](#caveat)
-            * [Additional Examples](#additional-examples)
-
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+* [Regex Enumerator](#regex-enumerator)
+     * [Installation](#installation)
+     * [Usage](#usage)
+        * [Regular Expression Syntax](#regular-expression-syntax)
+        * [Library Functions](#library-functions)
+        * [Caveat](#caveat)
+        * [Additional Examples](#additional-examples)
 
 -----
 
