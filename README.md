@@ -251,7 +251,7 @@ and running through a giant table lookup?
 
 Well, it's actually a lot simpler than that. However, there's a bit of a setup for the problem.
 
-#### Fibonacci Redux
+#### Regular Expressions as Numerical Expressions
 
 Let's rewind back to our first example; that of enumerating comma-separated sequences of `x`es:
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c6281cf4f962d25fbc36c57ce7850bbf.svg?invert_in_darkmode" align=middle width=109.31118pt height=16.438356pt/></p>
@@ -319,7 +319,7 @@ of sequences as well.
 That's a pretty cool trick to deduce equivalences between regular expressions, but is that all there is to it?
 
 It turns out that each of these translated numerical expressions also admit an infinite series expansion (in terms of its free variables). So
-<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/0f96f40aed211541cae40f311b924b63.svg?invert_in_darkmode" align=middle width=459.71805pt height=34.177275pt/></p>
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/473f23014075bbcd0c0de58e6318aae8.svg?invert_in_darkmode" align=middle width=511.00995pt height=34.177275pt/></p>
 and in general, we have the multivariable expansion
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ac3262648c32411a072d132fd3c8085f.svg?invert_in_darkmode" align=middle width=341.8173pt height=40.54809pt/></p>
 where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/0aae089ed20772138e327117bd8c6bac.svg?invert_in_darkmode" align=middle width=12.834525pt height=14.93184pt/> is the coefficient attached to the <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/1949bc43d509deddd1ed78695ad786ff.svg?invert_in_darkmode" align=middle width=66.720555pt height=30.61674pt/> term.
@@ -335,6 +335,37 @@ expansion is then the total count of all objects in this regular language that h
 This approach is called the generating function approach within elementary combinatorics. It is a powerful idea to create
 these compact analytical (if a bit nonsensical) representations of your combinatorial objects of interest in order to
 use more powerful analytical tools to find properties about them.
+
+#### Rational Functions
+
+We know that there's a translation for our regular expression
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8606a7f23ef7cbb3634c38fd0d1b7c79.svg?invert_in_darkmode" align=middle width=318.5358pt height=39.33996pt/></p>
+into some numerical field. We also know that this numerical formula admits a two-variable infinite series expansion.
+The task at hand now is one familiar to most students of complex analysis: coefficient extraction. Given a function
+<img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/cf23450151a368a8b73be5295d28b948.svg?invert_in_darkmode" align=middle width=47.4474pt height=25.43409pt/>, how are we going to find the coefficients of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/277251a7ce43b611d5199e923eb207ad.svg?invert_in_darkmode" align=middle width=38.151465pt height=22.61622pt/>?
+
+Before we tackle that beast, let's develop some more intuition about the functions that we will be working with.
+In general combinatorics, you may face complicated functions using an exotic variety of functions, differential forms,
+and even implicit functions that can't be expressed in some explicit form. So where do regular expressions sit on
+this spectrum?
+
+As it turns out, things are much nicer with regular expression (part of the reason they are called "regular"; their regularities
+ensure that their algebraic properties are easier to analyze than general unbounded constructions). In particular
+if a regular expression has a translation
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ab6b439a7b6f2f7bb1c89b15f3f86c33.svg?invert_in_darkmode" align=middle width=141.168225pt height=16.438356pt/></p>
+then we know for a fact that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6bda3dbae94e295bc19dc26f6c98e392.svg?invert_in_darkmode" align=middle width=31.492395pt height=25.43409pt/> is rational. What this means is that there's some pair of **polynomials** <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/10984eabe311a6010d1a7c9ed19f290e.svg?invert_in_darkmode" align=middle width=22.99902pt height=14.93184pt/> such that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/bb2c9595e133b232ec7531adc21556bb.svg?invert_in_darkmode" align=middle width=86.339055pt height=38.834895pt/></p>
+The proof of this fact will be included in the appendix for interested readers, however that proof does not contribute much here.
+Polynomials are interesting in the context of infinite expansions. Since polynomials are already in the form
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2214bde9017d94e45c0e5fbf9ba8d168.svg?invert_in_darkmode" align=middle width=125.589255pt height=54.17544pt/></p>
+their infinite expansions are in fact finite. Now, the same cannot be said of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4a8e6af385d1ec34270cdfef01270ec5.svg?invert_in_darkmode" align=middle width=23.653245pt height=28.55226pt/>, but a bit of algebra
+shows that the series expansion of this inverse is also computable:
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9fbd3c34d5a97baaf79cac3b11ee574f.svg?invert_in_darkmode" align=middle width=253.71885pt height=176.4015pt/></p>
+
+This form is particularly amenable for coefficient extraction, and a memoized version of this sits at the heart of the
+validation algorithm we use to test that the algebra for everything else is done correctly. See the appendix for a derivation
+of the dynamic program that can turn this into a somewhat fast coefficient extraction algorithm.
+
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 

@@ -263,7 +263,7 @@ and running through a giant table lookup?
 
 Well, it's actually a lot simpler than that. However, there's a bit of a setup for the problem.
 
-#### Fibonacci Redux
+#### Regular Expressions as Numerical Expressions
 
 Let's rewind back to our first example; that of enumerating comma-separated sequences of `x`es:
 $$
@@ -356,7 +356,7 @@ That's a pretty cool trick to deduce equivalences between regular expressions, b
 
 It turns out that each of these translated numerical expressions also admit an infinite series expansion (in terms of its free variables). So
 $$
-\frac{x}{(1 - x) - xz_{,}} = a_{0,0} + a_{0, 1} z_{,}^1 + a_{1, 0} x^1 + a_{1, 1} x^1 z_{,}^1 + a{0, 2} z{,}^2 + \cdots
+\frac{x}{(1 - x) - xz_{,}} = a_{0,0} + a_{0, 1} z_{,}^1 + a_{1, 0} x^1 + a_{1, 1} x^1 z_{,}^1 + a_{0, 2} z_{,}^2 + a_{1,2} x^1z_{,}^2 \cdots
 $$
 and in general, we have the multivariable expansion
 $$
@@ -375,6 +375,49 @@ expansion is then the total count of all objects in this regular language that h
 This approach is called the generating function approach within elementary combinatorics. It is a powerful idea to create
 these compact analytical (if a bit nonsensical) representations of your combinatorial objects of interest in order to
 use more powerful analytical tools to find properties about them.
+
+#### Rational Functions
+
+We know that there's a translation for our regular expression
+$$
+(xx^*,)^*xx^* \equiv \frac{x}{(1 - x) - xz_{,}} = \sum_{n,m} a_{n,m} x^nz_{,}^m
+$$
+into some numerical field. We also know that this numerical formula admits a two-variable infinite series expansion.
+The task at hand now is one familiar to most students of complex analysis: coefficient extraction. Given a function
+$f(x, y)$, how are we going to find the coefficients of $x^ny^m$?
+
+Before we tackle that beast, let's develop some more intuition about the functions that we will be working with.
+In general combinatorics, you may face complicated functions using an exotic variety of functions, differential forms,
+and even implicit functions that can't be expressed in some explicit form. So where do regular expressions sit on
+this spectrum?
+
+As it turns out, things are much nicer with regular expression (part of the reason they are called "regular"; their regularities
+ensure that their algebraic properties are easier to analyze than general unbounded constructions). In particular
+if a regular expression has a translation
+$$
+[\![e]\!] = f(x_0, \dots, x_n),
+$$
+then we know for a fact that $f(\vec{x})$ is rational. What this means is that there's some pair of **polynomials** $p, q$ such that
+$$
+f(\vec{x}) = \frac{p(\vec{x})}{q(\vec{x})}
+$$
+The proof of this fact will be included in the appendix for interested readers, however that proof does not contribute much here.
+Polynomials are interesting in the context of infinite expansions. Since polynomials are already in the form
+$$
+p(\vec{x}) = \sum_{\vec{i} \in \mathbb{N}^n}^{\deg(p)} a_{\vec{i}}\vec{x}^{\vec{i}},
+$$
+their infinite expansions are in fact finite. Now, the same cannot be said of $\frac{1}{q(\vec{x})}$, but a bit of algebra
+shows that the series expansion of this inverse is also computable:
+\begin{align*}
+\frac{1}{q(\vec{x})} &= \frac{q(0)}{\frac{q(0) + \sum_{\vec{i} \ne 0}a_{\vec{i}} \vec{x}^{\vec{i}}}{q(0)}} \\
+&= q(0) \frac{1}{1 - \underbrace{(-\sum_{\vec{i} \ne 0}\frac{a_{\vec{i}}}{q(0)} \vec{x}^{\vec{i}})}_{\text{call this }\hat q(\vec{x})}} \\
+&= q(0) (1 + \hat{q}(\vec{x}) + \hat{q}(\vec{x})^2 + \dots)
+\end{align*}
+
+This form is particularly amenable for coefficient extraction, and a memoized version of this sits at the heart of the
+validation algorithm we use to test that the algebra for everything else is done correctly. See the appendix for a derivation
+of the dynamic program that can turn this into a somewhat fast coefficient extraction algorithm.
+
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
