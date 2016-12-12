@@ -219,7 +219,8 @@ this poses no challenges to parsing (since we don't output a parse-tree), it doe
 In particular, the direct translation of this expression will claim that there are 2 strings of size 1
 in this language.
 
-There are ways to circumvent this, but I haven't gotten around to tackling this problem yet. Therefore, know that
+To remedy this, you can try to use `regex_enumerate.disambiguate(regex)`, but it's not completely clear
+that this is correct. Therefore, know that
 for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
 There is always a way to do this, though it might create an exponential number of additional states.
 
