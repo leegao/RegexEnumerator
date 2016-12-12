@@ -12,6 +12,21 @@ Enumerate Regular Expressions the Fun Way.
 
 -----
 
+Table of Contents
+=================
+
+   * [Regex Enumerator](#regex-enumerator)
+         * [Installation](#installation)
+         * [Usage](#usage)
+            * [Regular Expression Syntax](#regular-expression-syntax)
+            * [Library Functions](#library-functions)
+            * [Caveat](#caveat)
+            * [Additional Examples](#additional-examples)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+
+-----
+
 Have you ever wondered about how many different strings you can form that fits your favorite regex?
 
 Yeah, chances are you probably haven't. But it's on your mind now.
