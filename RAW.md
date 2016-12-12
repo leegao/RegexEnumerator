@@ -23,7 +23,7 @@ Table of Contents
         * [Regular Expression Syntax](#regular-expression-syntax)
         * [Library Functions](#library-functions)
         * [Caveat](#caveat)
-        * [Additional Examples](#additional-examples)
+     * [Additional Examples](#additional-examples)
 
 -----
 
@@ -64,9 +64,24 @@ counts every regular expression.
 
 ### Installation
 
-This library is just meant to be a demonstration. For now, you can install it by adding the `regex_enumerate` directory
-to your `PYTHONPATH`. Note that you will first need to install `numpy`, `scipy`, and `sympy` in order to support solving a few
+This library is just meant to be a demonstration. 
+
+You will need Python 2.7 or up, though it seems to be most stable on Python 3+.
+
+Note that you will need to install `numpy`, `scipy`, and `sympy` in order to support solving a few
 linear equations and to translate numerically computed roots into algebraic forms, if they are available.
+
+```bash
+git clone https://github.com/leegao/RegexEnumerator.git
+cd RegexEnumerator
+sudo python setup.py develop
+```
+
+To uninstall, run
+
+```bash
+pip uninstall RegexEnumerator
+```
 
 ### Usage
 
@@ -237,7 +252,7 @@ that this is correct. Therefore, know that
 for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
 There is always a way to do this, though it might create an exponential number of additional states.
 
-#### Additional Examples
+### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
   Its generating function is
