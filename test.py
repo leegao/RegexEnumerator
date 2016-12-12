@@ -1,3 +1,4 @@
+import regex_enumerate
 from regex_enumerate import check_on_oeis
 from regex_enumerate import enumerate_coefficients, exact_coefficients, generating_function, algebraic_form
 from itertools import islice
@@ -16,7 +17,7 @@ regexes = [
 ]
 for regex, comment in regexes:
     print("* `%s`: %s\n" % (regex, comment))
-    algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 20))
+    algebraic = list(map(lambda x: int(round(x)), islice(enumerate_coefficients(regex), 20)))
     formula = algebraic_form(regex)
     print("  Its generating function is\n  $$\n  %s\n  $$" % latex(generating_function(regex)))
     print("  For words of sizes up to 20 in this language, their counts are:\n\n      %s\n" % (', '.join(map(str, algebraic))))

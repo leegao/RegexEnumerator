@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+import itertools
 import mpmath
 from numpy import array
 from numpy.linalg import solve, norm
@@ -181,11 +182,14 @@ def extract_coefficients_algebraically(regex, what = None, threshold = 1e-3):
 
 
 def enumerate_coefficients(regex, what = None, threshold = 1e-3):
-    coefficients, _ = extract_coefficients_algebraically(regex, what, threshold)
-    n = 0
-    while True:
-        yield coefficients(n)
-        n += 1
+    formula = algebraic_form(regex, what, threshold)
+    def postprocess(number):
+        # if there is a I, make sure it's small
+        r, i = number.as_real_imag()
+        if abs(i) < threshold:
+            return r
+        raise Exception("Coefficients cannot be complex.")
+    return (postprocess(evaluate_expression(formula, n).evalf(32)) for n in itertools.count())
 
 
 def inverse_symbolic(n, threshold=1e-5):
