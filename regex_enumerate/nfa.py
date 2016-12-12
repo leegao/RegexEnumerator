@@ -239,12 +239,15 @@ def print_regex(ast):
 
 
 def disambiguate(regex):
+    R, dfa, accepts, n = compile_disambiguously(regex)
+    regex = reduce(('|', [R(1, k, n) for k in accepts]))
+    return regex
+
+
+def compile_disambiguously(regex):
     nfa = compile(parse(regex)) if isinstance(regex, str) else compile(regex)
     dfa = determinize(nfa)
-    R, dfa, accepts, n = reconstruct(*dfa)
-    regex = reduce(('|', [R(1, k, n) for k in accepts]))
-    return regex, (R, dfa, accepts, n)
-
+    return reconstruct(*dfa)
 
 if __name__ == '__main__':
     from itertools import islice
