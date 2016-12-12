@@ -252,6 +252,54 @@ that this is correct. Therefore, know that
 for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
 There is always a way to do this, though it might create an exponential number of additional states.
 
+### Justification
+
+Now, all of this might feel a little bullshitty. (Shameless plug, for more bullshitty math, check out http://bullshitmath.lol)
+Is there any real justification for what you are doing here? Am I just enumerating a bunch of pre-existing cases
+and running through a giant table lookup?
+
+Well, it's actually a lot simpler than that. However, there's a bit of a setup for the problem.
+
+#### Fibonacci Redux
+
+Let's rewind back to our first example; that of enumerating comma-separated sequences of `x`es:
+$$
+r = (xx^*,)^*xx^*
+$$
+We've seen above that this follows a fibonacci-like sequence. Is there some-way that we can derive this
+fact without brute-force enumeration?
+
+Let's start with the sequence of `x`es: $x*$. This language, in an infinitely expanded form, looks like
+$$
+x^* = \epsilon \mid x \mid xx \mid xxx \mid \cdots
+$$
+
+Now, here's a trick. Let's pretend that our bar ($\mid$) is a plus sign ($+$), so that
+$$
+x^* = \epsilon + x + xx + xxx + \cdots
+$$
+
+This looks remarkably familiar. In fact, if you are working within a numerical field, then a little bit of
+precalculus would also show that
+$$
+\frac{1}{1 - x} = 1 + x + xx + xxx + \cdots
+$$
+
+Could there be some connection here? Well, let's find out. To do this, let's equate the two expressions:
+$$
+x^* = \epsilon + x + xx + xxx + \cdots ~~~ \equiv ~~~ 1 + x + xx + xxx + \cdots = \frac{1}{1 - x}
+$$
+so $\epsilon \equiv 1$ and $x^* \equiv \frac{1}{1 - x}$ if we pretend that each regular expression has a numerical value.
+
+In fact, this works for every regular expression. For any regular expression $e_0$ and $e_1$, we have
+\begin{align*}
+\epsilon &\equiv 1 \\
+x, y, z &\equiv x, y, z \\
+e_0 e_1 &\equiv e_0 \times e_1 \\
+e_0 \mid e_1 &\equiv e_0 + e_1 \\
+e^* &\equiv \frac{1}{1 - e}
+\end{align*}
+As long as you don't need to invoke the axiom of multiplicative-commutativity, this reduction works.
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
