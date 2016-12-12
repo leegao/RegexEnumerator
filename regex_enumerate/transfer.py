@@ -14,11 +14,13 @@ def transfer(regex, what = None):
     :param regex
     :return: rational function
     '''
-    ast = parse(regex)
+    ast = parse(regex) if isinstance(regex, str) else regex
 
     def helper(ast):
         t, data = ast
         if t == '|':
+            if len(data) == 0:
+                return ('num', 0)
             if len(data) == 1:
                 return helper(data[0])
             if len(data) == 2:

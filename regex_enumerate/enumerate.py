@@ -212,9 +212,10 @@ def algebraic_form(regex, what = None, threshold = 1e-3):
     return series
 
 
-def generating_function(regex, what = None, threshold = 1e-3):
-    _, (clusters, basis, partial_coefficients, bottom, (overflow, (top, bottom))) = \
-        extract_coefficients_algebraically(regex, what, threshold)
+def generating_function(regex, what = None):
+    ast = transfer(regex, what)
+    # rationalize(regex) = overflow(z) + top(z)/bottom(z), where the quotient is irreducible.
+    overflow, (top, bottom) = simplify(*rationalize(ast))
     z = sympify('z')
     quotient = sum(c * z**k for (k, c) in overflow.items())
     p = sum(c * z**k for (k, c) in top.items())
