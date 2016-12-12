@@ -1,7 +1,7 @@
 from collections import defaultdict
-from functools import lru_cache
 
 from regex_enumerate.parse import parse
+from regex_enumerate.memoize import memoized
 
 class NFA(object):
     next = 0
@@ -61,7 +61,7 @@ def compile(ast):
 
 
 def determinize(nfa):
-    @lru_cache()
+    @memoized()
     def closure(s):
         '''
         Computes the set of states reachable by s through just %-transitions
@@ -137,7 +137,7 @@ def reconstruct(start, final_atom, dfa):
         if final_atom in state: accepts.add(i + 1)
     dfa = sorted(set([(hash[tuple(sorted(p))], hash[tuple(sorted(q))], c) for p, q, c in dfa]))
     n = len(states)
-    @lru_cache()
+    @memoized()
     def R(i, j, k):
         '''
         R(i, j, k) is the regular expression for the language that goes from state i to
