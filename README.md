@@ -22,7 +22,11 @@ Enumerate Regular Expressions the Fun Way.
         * [Library Functions](#library-functions)
         * [Caveat](#caveat)
      * [Justification](#justification)
-        * [Fibonacci Redux](#fibonacci-redux)
+        * [Regular Expressions as Numerical Expressions](#regular-expressions-as-numerical-expressions)
+        * [Rational Functions](#rational-functions)
+        * [Univariate Functions](#univariate-functions)
+        * [Partial Fraction Decompositions](#partial-fraction-decompositions)
+        * [Fibonacci, Redux](#fibonacci-redux)
      * [Additional Examples](#additional-examples)
 
 
@@ -366,6 +370,56 @@ This form is particularly amenable for coefficient extraction, and a memoized ve
 validation algorithm we use to test that the algebra for everything else is done correctly. See the appendix for a derivation
 of the dynamic program that can turn this into a somewhat fast coefficient extraction algorithm.
 
+#### Univariate Functions
+
+Now, up to now, we've been talking about multivariable functions <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6bda3dbae94e295bc19dc26f6c98e392.svg?invert_in_darkmode" align=middle width=31.492395pt height=25.43409pt/>. This makes sense since we need to parameterize
+our model on each of the letters in our alphabet (oh boy). In general however, multivariable coefficient extraction problems
+are prohibitively difficult. Not only that, the numerical tools needed to compute saddle-points are outside the scope of this
+toy project. For more on general methods of multivariate enumeration techniques, check out [ACVS].
+
+The situation isn't so bleak within the rational-function realm however, and while there is a straightforward extension of
+the traditional coefficient-extraction technique to multivariable rational-functions, I just never got to it. See [Stoutemyer08]
+for a brief summary of the multivariate partial-fraction decomposition method. Just know that this isn't supported currently.
+
+Instead, we will only support the class of enumeration problems that counts the total number of words of a certain (singular) size in some language family.
+The trick here is to turn a blind eye on the fact that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/332cc365a4987aacce0ead01b8bdcc0b.svg?invert_in_darkmode" align=middle width=8.88954pt height=14.93184pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/deceeaf6940a8c7a5a02373728002b0f.svg?invert_in_darkmode" align=middle width=8.14374pt height=14.93184pt/> are different variables. In order to do this, we just set them both equal
+to some other variable <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f93ce33e511096ed626b4719d50f17d2.svg?invert_in_darkmode" align=middle width=7.862085pt height=14.93184pt/>. Therefore, the Fibonnacci generating function above
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/984dadf6da36aa5408797007bd6f15cc.svg?invert_in_darkmode" align=middle width=177.936pt height=34.177275pt/></p>
+
+#### Partial Fraction Decompositions
+
+Now that we have a univariate rational function of the form
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/7dabb5affcaf18da653acdfa0ff2b07f.svg?invert_in_darkmode" align=middle width=84.28431pt height=38.834895pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9ee547e0827e5bb29b5feb9f5f574193.svg?invert_in_darkmode" align=middle width=22.99902pt height=14.93184pt/> are mutually irreducible (that is, there isn't some other polynomial <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/07df09780199cd1c3b3d1dd82379f7aa.svg?invert_in_darkmode" align=middle width=28.52058pt height=25.43409pt/> that evenly divides both <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2ec6e630f199f589a2402fdf3e0289d5.svg?invert_in_darkmode" align=middle width=7.765065pt height=14.93184pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d5c18a8ca1894fd3a7d25f242cbe8890.svg?invert_in_darkmode" align=middle width=7.4226075pt height=14.93184pt/>).
+
+There's a concept within polynomial algebra known as a partial fraction decomposition. This decomposition theorem tells us that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8469ee2486413b1cb2d49a25f0d14ea2.svg?invert_in_darkmode" align=middle width=297.25905pt height=53.88141pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4dbaa1ab010763c5072bb490bdbdf9d5.svg?invert_in_darkmode" align=middle width=31.63281pt height=25.43409pt/> (the variety) is the set of roots of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6691168338edf252db6a5fb234f77fea.svg?invert_in_darkmode" align=middle width=58.712445pt height=25.43409pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f400b03e899ac819ce6290b0df16a7d6.svg?invert_in_darkmode" align=middle width=103.029795pt height=25.43409pt/> is its multiplicity.
+
+So for example, the rational function <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/02c1631f5be5eb90a102ce60a458bb0e.svg?invert_in_darkmode" align=middle width=75.156015pt height=33.9834pt/> has the partial fraction decomposition of
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4076d8eaca686675b43659a2d77b30c3.svg?invert_in_darkmode" align=middle width=313.9125pt height=38.834895pt/></p>
+no matter what <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8fffcccc47f9f88dac738cc6bbf65e09.svg?invert_in_darkmode" align=middle width=28.918065pt height=25.43409pt/> is. To solve for <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c5c1cb5ecc00088ca2051b21a52d9357.svg?invert_in_darkmode" align=middle width=25.10343pt height=14.93184pt/>, you can exploit the fact that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/437096621f5105075f864f97c3f54c0f.svg?invert_in_darkmode" align=middle width=472.52535pt height=45.711435pt/></p>
+expanding the numerator and setting them equal to <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8fffcccc47f9f88dac738cc6bbf65e09.svg?invert_in_darkmode" align=middle width=28.918065pt height=25.43409pt/> will give you a linear system to solve. The details of how we are going
+to solve this linear system doesn't matter, it'll be taken care of for you under the hood by `numpy`.
+
+Now, how does the partial fraction decomposition help us? Recall that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5ebcb0a6aef6336b53761379189db9f7.svg?invert_in_darkmode" align=middle width=379.07595pt height=44.72919pt/></p>
+and in general (by way of the binomial theorem)
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/64b69890c199d02a3533d94b2a0fd322.svg?invert_in_darkmode" align=middle width=565.9731pt height=42.021375pt/></p>
+which means that if 
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/bc50720b080c2bd9cd215c626870be73.svg?invert_in_darkmode" align=middle width=138.54984pt height=40.20753pt/></p>
+then the coefficients on <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d0d4c612492648caccbb6e4c2986e6ea.svg?invert_in_darkmode" align=middle width=15.98817pt height=22.61622pt/> is
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a5e38cd8560cabca93520f790be6b17c.svg?invert_in_darkmode" align=middle width=316.83795pt height=45.845085pt/></p>
+
+*Bam!* Closed form expression for any arbitrary regular expression!
+
+While this might seem super complicated, at the heart of this method, we're just using a very well-known method to expand
+a rational function. This is in part why the functional part of this project that deals with computing this closed form is only
+a couple of lines long. It's actually a really simple idea.
+
+#### Fibonacci, Redux
+
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
@@ -520,3 +574,7 @@ of the dynamic program that can turn this into a somewhat fast coefficient extra
   1. Nearly-Fibonacci sequence: https://oeis.org/A264800
   1. Pisot sequences E(5,8), P(5,8): https://oeis.org/A020712
   1. a(n) = s(1)t(n) + s(2)t(n-1) + : https://oeis.org/A024595
+
+
+[ACVS]: https://www.math.upenn.edu/~pemantle/papers/ACSV.pdf
+[Stoutemyer08]: https://doi.org/10.1145/1504341.1504346

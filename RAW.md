@@ -24,7 +24,11 @@ $$
         * [Library Functions](#library-functions)
         * [Caveat](#caveat)
      * [Justification](#justification)
-        * [Fibonacci Redux](#fibonacci-redux)
+        * [Regular Expressions as Numerical Expressions](#regular-expressions-as-numerical-expressions)
+        * [Rational Functions](#rational-functions)
+        * [Univariate Functions](#univariate-functions)
+        * [Partial Fraction Decompositions](#partial-fraction-decompositions)
+        * [Fibonacci, Redux](#fibonacci-redux)
      * [Additional Examples](#additional-examples)
 
 
@@ -418,6 +422,74 @@ This form is particularly amenable for coefficient extraction, and a memoized ve
 validation algorithm we use to test that the algebra for everything else is done correctly. See the appendix for a derivation
 of the dynamic program that can turn this into a somewhat fast coefficient extraction algorithm.
 
+#### Univariate Functions
+
+Now, up to now, we've been talking about multivariable functions $f(\vec{x})$. This makes sense since we need to parameterize
+our model on each of the letters in our alphabet (oh boy). In general however, multivariable coefficient extraction problems
+are prohibitively difficult. Not only that, the numerical tools needed to compute saddle-points are outside the scope of this
+toy project. For more on general methods of multivariate enumeration techniques, check out [ACVS].
+
+The situation isn't so bleak within the rational-function realm however, and while there is a straightforward extension of
+the traditional coefficient-extraction technique to multivariable rational-functions, I just never got to it. See [Stoutemyer08]
+for a brief summary of the multivariate partial-fraction decomposition method. Just know that this isn't supported currently.
+
+Instead, we will only support the class of enumeration problems that counts the total number of words of a certain (singular) size in some language family.
+The trick here is to turn a blind eye on the fact that $x$ and $y$ are different variables. In order to do this, we just set them both equal
+to some other variable $z$. Therefore, the Fibonnacci generating function above
+$$
+\frac{x}{1 - x - xz_{,}} = \frac{z}{1 - z - z^2}
+$$
+
+#### Partial Fraction Decompositions
+
+Now that we have a univariate rational function of the form
+$$
+f(z) = \frac{p(z)}{q(z)}
+$$
+where $p,q$ are mutually irreducible (that is, there isn't some other polynomial $r(z)$ that evenly divides both $p$ and $q$).
+
+There's a concept within polynomial algebra known as a partial fraction decomposition. This decomposition theorem tells us that
+$$
+f(z) = \frac{p(z)}{q(z)} = \sum_{r \in \mathcal{V}(q)} \sum_{k = 1}^{\mathrm{multiplicity}(r)} \frac{a_{r,k}}{(z - r)^k}
+$$
+where $\mathcal{V}(q)$ (the variety) is the set of roots of $q(z) = 0$ and $\mathrm{multiplicity}(r)$ is its multiplicity.
+
+So for example, the rational function $\frac{p(z)}{(z - 1)^2(z - \pi)}$ has the partial fraction decomposition of
+$$
+\frac{p(z)}{(z - 1)^2(z - \pi)} = \frac{a_{1,1}}{z - 1} + \frac{a_{1,2}}{(z - 1)^2} + \frac{a_{\pi,1}}{z - \pi}
+$$
+no matter what $p(z)$ is. To solve for $a_{r,k}$, you can exploit the fact that
+$$
+\frac{A}{(z - r_0)} + \frac{B}{(z - r_1)} + \cdots + \frac{Z}{(z - r_n)} = \frac{A \frac{q(z)}{z - r_0} + \cdots + Z \frac{q(z)}{z - r_n}}{(z - r_0) \cdots (z - r_n) = p(z)}
+$$
+expanding the numerator and setting them equal to $p(z)$ will give you a linear system to solve. The details of how we are going
+to solve this linear system doesn't matter, it'll be taken care of for you under the hood by `numpy`.
+
+Now, how does the partial fraction decomposition help us? Recall that
+$$
+\frac{A}{z - r} = \frac{\frac{A}{-r}}{1 - \frac{z}{r}} = \left(-\frac{A}{r}\right) \times \left(1 + r^{-1} z + r^{-2}z^2 + \cdots\right)
+$$
+and in general (by way of the binomial theorem)
+$$
+\frac{A}{(z - r)^k} = \frac{A(-r)^{-k}}{(1 - \frac{z}{r})^k} = \left(A(-r)^{-k}\right) \left(1 + \binom{k}{k-1}r^{-1}z + \binom{k + 1}{k}r^{-2}z^2 + \cdots\right)
+$$
+which means that if 
+$$
+f(z) = \sum_{r,k} \frac{a_{r,k}}{(z - r)^k}
+$$
+then the coefficients on $z^n$ is
+$$
+[z^n]f(z) = \sum_{r, k} (-1)^k a_{r, k}\binom{n + k - 1}{k - 1} r^{-(n+k)}
+$$
+
+*Bam!* Closed form expression for any arbitrary regular expression!
+
+While this might seem super complicated, at the heart of this method, we're just using a very well-known method to expand
+a rational function. This is in part why the functional part of this project that deals with computing this closed form is only
+a couple of lines long. It's actually a really simple idea.
+
+#### Fibonacci, Redux
+
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
@@ -604,3 +676,7 @@ of the dynamic program that can turn this into a somewhat fast coefficient extra
   1. Nearly-Fibonacci sequence: https://oeis.org/A264800
   1. Pisot sequences E(5,8), P(5,8): https://oeis.org/A020712
   1. a(n) = s(1)t(n) + s(2)t(n-1) + : https://oeis.org/A024595
+
+
+[ACVS]: https://www.math.upenn.edu/~pemantle/papers/ACSV.pdf
+[Stoutemyer08]: https://doi.org/10.1145/1504341.1504346
