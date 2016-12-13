@@ -66,18 +66,16 @@ counts every regular expression.
 
 ### Installation
 
-This library is just meant to be a demonstration. 
-
 You will need Python 2.7 or up, though it seems to be most stable on Python 3+.
-
-Note that you will need to install `numpy`, `scipy`, and `sympy` in order to support solving a few
-linear equations and to translate numerically computed roots into algebraic forms, if they are available.
 
 ```bash
 git clone https://github.com/leegao/RegexEnumerator.git
 cd RegexEnumerator
 sudo python setup.py develop
 ```
+
+Note that you will need to install `numpy`, `scipy`, and `sympy` in order to support solving a few
+linear equations and to translate numerically computed roots into algebraic forms, if they are available.
 
 To uninstall, run
 
@@ -181,7 +179,7 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   # a(n) = s(1)t(n) + s(2)t(n-1) + : https://oeis.org/A024595
   ```
 
-* `disambiguate(regex)`: [EXPERIMENTAL] attempts to construct an unambiguous regular expression. In many cases,
+* `disambiguate(regex)`: *[Experimental]* attempts to construct an unambiguous regular expression. In many cases,
   regular expressions are ambiguous. For example, <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a5e47a69368560eb1f96acf425b6b4da.svg?invert_in_darkmode" align=middle width=42.416715pt height=25.43409pt/> is a classic example. Ambiguities is the source of
   redundancy, and unfortunately, our enumeration methods won't understand that the redundant components are already
   taken care of. Therefore, care must be taken to to ensure that the regular expression is unambiguous.
