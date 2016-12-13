@@ -2,16 +2,12 @@
 
 Enumerate Regular Expressions the Fun Way.
 
-The regular expression $(0^+1)^* 0^+$ becomes
-$$
-\frac{z}{1 - z - z^2}
-$$
+
+The regular expression $(0^+1)^* 0^+$ becomes $\frac{z}{1 - z - z^2}$, which tells us that there are $\left(- \frac{1}{2} + \frac{\sqrt{5}}{2}\right)^{- n - 1} \left(- \frac{\sqrt{5}}{10} + \frac{1}{2}\right) + \left(- \frac{\sqrt{5}}{2} - \frac{1}{2}\right)^{- n - 1} \left(\frac{\sqrt{5}}{10} + \frac{1}{2}\right)$ words of size $n$ in this language.
 
 <p align="center">
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
-
-which tells us that there are $\left(- \frac{1}{2} + \frac{\sqrt{5}}{2}\right)^{- n - 1} \left(- \frac{\sqrt{5}}{10} + \frac{1}{2}\right) + \left(- \frac{\sqrt{5}}{2} - \frac{1}{2}\right)^{- n - 1} \left(\frac{\sqrt{5}}{10} + \frac{1}{2}\right)$ words of size $n$ in this language.
 
 Regex Enumerator takes in a regular expression, and spits out a closed-form formula for the number of $n$-letter words in your language.
 
@@ -40,6 +36,7 @@ Regex Enumerator takes in a regular expression, and spits out a closed-form form
         * [Rationalizing Reduction](#rationalizing-reduction)
         * [Proof that Regular Expressions generate Rational Functions](#proof-that-regular-expressions-generate-rational-functions)
         * [Exact Enumeration](#exact-enumeration)
+        * [Disambiguation Algorithm](#disambiguation-algorithm)
         * [Additional Examples](#additional-examples)
 
 -----
@@ -55,19 +52,19 @@ $$
 (0^+,)^*0^+
 $$
 It specifies the class of languages that are comma-separated list of strings of zeros. For example,
-`000, 0, 00000` belongs to this language, but `0,,0` and `0,0,` does not.
+`000, 0, 00000` belongs to this language, but `0, , 0` and `0, 0, ` do not.
 
 Now, it might seem like a masochistic endeavor, but if you enumerate every possible word in this language, you'll
-find that there are no empty strings, 1 single letter string, 1 two letter string, 2 three letter strings, 3 four letter
-strings, and so on. This pattern actually looks like
+find that there are 0 empty strings, 1 single letter string, 1 two letter string, 2 three letter strings, 3 four letter
+strings, and so on. This pattern looks like
 
     0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, ...
 
-Why, that is the fibonacci sequence! How did it end up in such a mundane place?
+Why, that is the fibonacci sequence! How did it end up here of all places?
 
 Now, I could give you a combinatorial interpretation for this amazeballs result, but I still get shivers up my spine
-whenever I think back to my undergrad Combinatorics course. Instead, I'll give a more general way to compute these
-enumerations.
+whenever I think back to my undergrad Combinatorics course. Instead, I'll give you a more general way to compute these
+enumerations as well as an algorithm that can do all of the tedious pencil-pushin on your behalf.
 
 However, that's not the end of it. It turns out that this algorithm can also compute a closed-form formula
 for this sequence.
@@ -76,8 +73,8 @@ F_n = \left(- \frac{1}{2} + \frac{\sqrt{5}}{2}\right)^{- n - 1} \left(- \frac{\s
 $$
 where $F_n$ is the number of comma-separated lists of size $n$.
 
-Now, this might not look very pretty, but it's still pretty cool that there is a (computable) closed form expression that
-counts every regular expression.
+Yes, that's right, there is an algorithm that can determine the closed-form counting expression for *every* (unambiguous)
+regular expression!
 
 -----------------------------------
 
@@ -122,9 +119,8 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
 
 `regex_enumerate` offers a few library functions for you to use.
 
-* `enumerate_coefficients`: Runs the magical algorithm to give you an algorithm that can compute
-  the count of words of size `n` in time that is only proportional (linearly) to the number of terms in your
-  regular expression.
+* `enumerate_coefficients`: Returns an infinite generator counting the number of words of size $n$ in your language.
+  Since it depends on numerical approximations, you'll have to contend with round-off and truncation errors.
   
   ```python
   from regex_enumerate import enumerate_coefficients
@@ -145,7 +141,7 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
   ```
 
-* `algebraic_form`: Computes the algebraic closed form of a regular expression.
+* `algebraic_form`: Computes the algebraic closed form counting formula of a regular expression.
 
   ```python
   from regex_enumerate import algebraic_form, evaluate_expression
@@ -201,7 +197,8 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
 * `disambiguate(regex)`: *[Experimental]* attempts to construct an unambiguous regular expression. In many cases,
   regular expressions are ambiguous. For example, $(0\mid 0)$ is a classic example. Ambiguities is the source of
   redundancy, and unfortunately, our enumeration methods won't understand that the redundant components are already
-  taken care of. Therefore, care must be taken to to ensure that the regular expression is unambiguous.
+  taken care of, and will count the same word multiple times. Therefore, care must be taken to to ensure that the 
+  regular expression is unambiguous.
   
   This is an experimental algorithm that reduces any regular expression into an ambiguity free form. The cost is a
   potentially exponential blow-up in the size of your regular expression. However, for most of the simple cases, this
@@ -246,6 +243,7 @@ from regex_enumerate import generating_function
 from sympy import latex
 
 print(latex(generating_function("(0+1)*0+")))
+# \frac{1.0 z}{- 1.0 z^{2} - 1.0 z + 1.0}
 ```
 
 which outputs
@@ -275,7 +273,7 @@ Now, all of this might feel a little bullshitty. (Shameless plug, for more bulls
 Is there any real justification for what you are doing here? Am I just enumerating a bunch of pre-existing cases
 and running through a giant table lookup?
 
-Well, it's actually a lot simpler than that. However, there's a bit of a setup for the problem.
+Well, it's actually a lot simpler (at least the algorithm is) than that. However, there's a bit of a setup for the problem.
 
 #### Regular Expressions as Numerical Expressions
 
@@ -691,6 +689,10 @@ $$
 [z^n] \frac{p(z)}{1 - (1 - q(z))} = [z^n] p(z) - [z^n] p(z) q(z) + [z^n] (p(z) q(z)) q(z) + \cdots
 $$
 in turn requires $O(n^3)$ time.
+
+#### Disambiguation Algorithm
+
+TBA.
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1

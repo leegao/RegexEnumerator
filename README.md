@@ -2,14 +2,12 @@
 
 Enumerate Regular Expressions the Fun Way.
 
-The regular expression <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f9d2f9a74a3d1a9fc852220717fcbd49.svg?invert_in_darkmode" align=middle width=65.49939pt height=26.95407pt/> becomes
-<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/61fa82c0a7ddc04771d7ce2b85e8fc30.svg?invert_in_darkmode" align=middle width=72.51123pt height=30.84411pt/></p>
+
+The regular expression <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f9d2f9a74a3d1a9fc852220717fcbd49.svg?invert_in_darkmode" align=middle width=65.49939pt height=26.95407pt/> becomes <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/65e60fac43981f156ec935ea689c64d7.svg?invert_in_darkmode" align=middle width=46.50789pt height=23.62998pt/>, which tells us that there are <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/08935cbff6db1dcb54959d691f86ffce.svg?invert_in_darkmode" align=middle width=421.600245pt height=45.3321pt/> words of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/> in this language.
 
 <p align="center">
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
-
-which tells us that there are <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/08935cbff6db1dcb54959d691f86ffce.svg?invert_in_darkmode" align=middle width=421.600245pt height=45.3321pt/> words of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/> in this language.
 
 Regex Enumerator takes in a regular expression, and spits out a closed-form formula for the number of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/>-letter words in your language.
 
@@ -38,6 +36,7 @@ Regex Enumerator takes in a regular expression, and spits out a closed-form form
         * [Rationalizing Reduction](#rationalizing-reduction)
         * [Proof that Regular Expressions generate Rational Functions](#proof-that-regular-expressions-generate-rational-functions)
         * [Exact Enumeration](#exact-enumeration)
+        * [Disambiguation Algorithm](#disambiguation-algorithm)
         * [Additional Examples](#additional-examples)
 
 -----
@@ -51,27 +50,27 @@ Yeah, chances are you probably haven't. But it's on your mind now.
 Here's one of my favorite regular expressions:
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/120bcbe220479f3fb301392b145130a5.svg?invert_in_darkmode" align=middle width=65.09151pt height=18.020145pt/></p>
 It specifies the class of languages that are comma-separated list of strings of zeros. For example,
-`000, 0, 00000` belongs to this language, but `0,,0` and `0,0,` does not.
+`000, 0, 00000` belongs to this language, but `0, , 0` and `0, 0, ` do not.
 
 Now, it might seem like a masochistic endeavor, but if you enumerate every possible word in this language, you'll
-find that there are no empty strings, 1 single letter string, 1 two letter string, 2 three letter strings, 3 four letter
-strings, and so on. This pattern actually looks like
+find that there are 0 empty strings, 1 single letter string, 1 two letter string, 2 three letter strings, 3 four letter
+strings, and so on. This pattern looks like
 
     0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, ...
 
-Why, that is the fibonacci sequence! How did it end up in such a mundane place?
+Why, that is the fibonacci sequence! How did it end up here of all places?
 
 Now, I could give you a combinatorial interpretation for this amazeballs result, but I still get shivers up my spine
-whenever I think back to my undergrad Combinatorics course. Instead, I'll give a more general way to compute these
-enumerations.
+whenever I think back to my undergrad Combinatorics course. Instead, I'll give you a more general way to compute these
+enumerations as well as an algorithm that can do all of the tedious pencil-pushin on your behalf.
 
 However, that's not the end of it. It turns out that this algorithm can also compute a closed-form formula
 for this sequence.
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c709d2b386c7588133c620efa335e165.svg?invert_in_darkmode" align=middle width=514.0443pt height=52.667175pt/></p>
 where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c9c53a99901c4a67544997f70b0f01bc.svg?invert_in_darkmode" align=middle width=18.19125pt height=23.24256pt/> is the number of comma-separated lists of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/>.
 
-Now, this might not look very pretty, but it's still pretty cool that there is a (computable) closed form expression that
-counts every regular expression.
+Yes, that's right, there is an algorithm that can determine the closed-form counting expression for *every* (unambiguous)
+regular expression!
 
 -----------------------------------
 
@@ -116,9 +115,8 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
 
 `regex_enumerate` offers a few library functions for you to use.
 
-* `enumerate_coefficients`: Runs the magical algorithm to give you an algorithm that can compute
-  the count of words of size `n` in time that is only proportional (linearly) to the number of terms in your
-  regular expression.
+* `enumerate_coefficients`: Returns an infinite generator counting the number of words of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/> in your language.
+  Since it depends on numerical approximations, you'll have to contend with round-off and truncation errors.
   
   ```python
   from regex_enumerate import enumerate_coefficients
@@ -139,7 +137,7 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
   ```
 
-* `algebraic_form`: Computes the algebraic closed form of a regular expression.
+* `algebraic_form`: Computes the algebraic closed form counting formula of a regular expression.
 
   ```python
   from regex_enumerate import algebraic_form, evaluate_expression
@@ -193,7 +191,8 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
 * `disambiguate(regex)`: *[Experimental]* attempts to construct an unambiguous regular expression. In many cases,
   regular expressions are ambiguous. For example, <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a5e47a69368560eb1f96acf425b6b4da.svg?invert_in_darkmode" align=middle width=42.416715pt height=25.43409pt/> is a classic example. Ambiguities is the source of
   redundancy, and unfortunately, our enumeration methods won't understand that the redundant components are already
-  taken care of. Therefore, care must be taken to to ensure that the regular expression is unambiguous.
+  taken care of, and will count the same word multiple times. Therefore, care must be taken to to ensure that the 
+  regular expression is unambiguous.
   
   This is an experimental algorithm that reduces any regular expression into an ambiguity free form. The cost is a
   potentially exponential blow-up in the size of your regular expression. However, for most of the simple cases, this
@@ -238,6 +237,7 @@ from regex_enumerate import generating_function
 from sympy import latex
 
 print(latex(generating_function("(0+1)*0+")))
+# \frac{1.0 z}{- 1.0 z^{2} - 1.0 z + 1.0}
 ```
 
 which outputs
@@ -263,7 +263,7 @@ Now, all of this might feel a little bullshitty. (Shameless plug, for more bulls
 Is there any real justification for what you are doing here? Am I just enumerating a bunch of pre-existing cases
 and running through a giant table lookup?
 
-Well, it's actually a lot simpler than that. However, there's a bit of a setup for the problem.
+Well, it's actually a lot simpler (at least the algorithm is) than that. However, there's a bit of a setup for the problem.
 
 #### Regular Expressions as Numerical Expressions
 
@@ -564,6 +564,10 @@ dynamic program. We will in turn focus on the problem of computing
 where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8c58e0aff8d238accd8704a6307fd3d0.svg?invert_in_darkmode" align=middle width=92.782305pt height=28.68921pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/54ab499713ae84b672c4d71e0341662a.svg?invert_in_darkmode" align=middle width=128.30763pt height=28.68921pt/> are subproblems. Computing
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b00d1bba617d37e1b2689ef5998dabad.svg?invert_in_darkmode" align=middle width=497.8941pt height=38.834895pt/></p>
 in turn requires <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/90846c243bb784093adbb6d2d0b2b9d0.svg?invert_in_darkmode" align=middle width=42.516705pt height=27.5385pt/> time.
+
+#### Disambiguation Algorithm
+
+TBA.
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
