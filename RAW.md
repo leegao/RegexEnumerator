@@ -639,6 +639,48 @@ only generates rational functions.
 
 Since this covers all cases of $e$, it must be the case that $[\![e]\!]$ is rational. $\square$
 
+#### Exact Enumeration
+
+As mentioned before, we'll give an algorithm to compute the exact enumeration problem in cubic time. In essence,
+the input consists of three polynomials
+$$
+g(z) = \mathrm{Quotient}(z) + \frac{p(z)}{q(z)}
+$$
+where without loss of generality, $\frac{p}{q}$ is irreducible. We will consider the problem of finding $[z^n]g(z)$, which
+is the coefficient of $z^n$ in the infinite series expansion of $g(z)$. In particular, since it's easy to compute $[z^n] \mathrm{Quotient}(z)$
+since it is a polynomial, we will instead focus on the problem of computing $[z^n] \frac{p(z)}{q(z)}$. Furthermore, we can
+apply an identity transformation and consider
+$$
+[z^n]A\frac{p(z)}{1 - \hat q(z)}
+$$
+There are a few ways to do this. An easy way is to let $\hat q(z) = 1 - q(z)$, hence
+$$
+\frac{p(z)}{1 - (1 - q(z))} = p(z)(1 + (1 - q(z)) + (1 - q(z))^2 + \cdots).
+$$
+By the binomial theorem, we know that
+$$
+(1 - q(z))^n = \sum_k {n \choose k} (-q(z))^k,
+$$
+so 
+$$
+\frac{p(z)}{1 - (1 - q(z))} = \sum_n \sum_{k \le n} {n \choose k}p(z)(-q(z))^k
+$$
+Since we can compute $p(z)q(z)^{k+1}$ from the solution of $p(z)q(z)^k$, computing this product forms the basis of our
+dynamic program. We will in turn focus on the problem of computing
+\begin{align*}
+[z^n]p(z)q(z) &= [z^n](p_0 + p_1 z + \cdots)(q_0 + q_1 z + \cdots) \\
+&= [z^n](p_0 q_0 + p_0 q_1 z + p_0 q_2 z^2 + \cdots) \\
+&+ ~~~~~~~~~~~~~~(p_1 q_0 z + p_1 q_1 z^2 + \cdots) \\
+&+ \cdots \\
+&= [z^n]\sum_m \sum_{k \le m} p_k q_{m-k} z^m \\
+&= \sum_{k \le n} p_k q_{n-k}
+\end{align*}
+where $p_k = [z^k] p(z)$ and $q_{n-k} = [z^{n-k}]q(z)$ are subproblems. Computing
+$$
+[z^n] \frac{p(z)}{1 - (1 - q(z))} = [z^n] p(z) - [z^n] p(z) q(z) + [z^n] (p(z) q(z)) q(z) + \cdots
+$$
+in turn requires $O(n^3)$ time.
+
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 

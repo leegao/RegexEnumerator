@@ -531,6 +531,29 @@ only generates rational functions.
 
 Since this covers all cases of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8cd34385ed61aca950a6b06d09fb50ac.svg?invert_in_darkmode" align=middle width=7.1486415pt height=14.93184pt/>, it must be the case that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5895759cc417e03c35a06eed530a6b55.svg?invert_in_darkmode" align=middle width=19.934145pt height=25.43409pt/> is rational. <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/365841a3c2f20d1b1a7fa5bf49ebb8ea.svg?invert_in_darkmode" align=middle width=12.27996pt height=22.96866pt/>
 
+#### Exact Enumeration
+
+As mentioned before, we'll give an algorithm to compute the exact enumeration problem in cubic time. In essence,
+the input consists of three polynomials
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/92df2c22213e736886b2dc63459d1b77.svg?invert_in_darkmode" align=middle width=187.6116pt height=38.834895pt/></p>
+where without loss of generality, <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6d25c0088d279b5b442786aca8d291fa.svg?invert_in_darkmode" align=middle width=6.263565pt height=25.35192pt/> is irreducible. We will consider the problem of finding <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/dab16cf4dbd9c0a72c389ea16c4f9fb7.svg?invert_in_darkmode" align=middle width=55.525965pt height=25.43409pt/>, which
+is the coefficient of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d0d4c612492648caccbb6e4c2986e6ea.svg?invert_in_darkmode" align=middle width=15.98817pt height=22.61622pt/> in the infinite series expansion of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9008eec3f9c4d5100375da631c794630.svg?invert_in_darkmode" align=middle width=29.07795pt height=25.43409pt/>. In particular, since it's easy to compute <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c02d234cd449caeecfd2827c34354146.svg?invert_in_darkmode" align=middle width=110.566005pt height=25.43409pt/>
+since it is a polynomial, we will instead focus on the problem of computing <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3ab7f615280654e8864cc7799a9d6967.svg?invert_in_darkmode" align=middle width=51.71793pt height=33.9834pt/>. Furthermore, we can
+apply an identity transformation and consider
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3651f8f5eabfb329dbc8e264cc866e9d.svg?invert_in_darkmode" align=middle width=98.140845pt height=38.834895pt/></p>
+There are a few ways to do this. An easy way is to let <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5f5cb941ee63f4986af3f93a831c49b9.svg?invert_in_darkmode" align=middle width=107.884755pt height=25.43409pt/>, hence
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/96f1d66b5db94fec3d08c801a897d503.svg?invert_in_darkmode" align=middle width=407.29095pt height=38.834895pt/></p>
+By the binomial theorem, we know that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d7d022f264399ea0a1c2af601e754e04.svg?invert_in_darkmode" align=middle width=228.9012pt height=43.60752pt/></p>
+so 
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/fd81b52353cc61abeccc6a52ec15af30.svg?invert_in_darkmode" align=middle width=302.676pt height=45.741795pt/></p>
+Since we can compute <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9327ae9b7561ddd830ed79d3c7011b02.svg?invert_in_darkmode" align=middle width=81.909135pt height=28.68921pt/> from the solution of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/e897fd3935596383173618283f97a3cd.svg?invert_in_darkmode" align=middle width=65.265255pt height=28.68921pt/>, computing this product forms the basis of our
+dynamic program. We will in turn focus on the problem of computing
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4f9f8b44cfc4d445d9f1157c2d8d3316.svg?invert_in_darkmode" align=middle width=360.53985pt height=189.4233pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8c58e0aff8d238accd8704a6307fd3d0.svg?invert_in_darkmode" align=middle width=92.782305pt height=28.68921pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/54ab499713ae84b672c4d71e0341662a.svg?invert_in_darkmode" align=middle width=128.30763pt height=28.68921pt/> are subproblems. Computing
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b00d1bba617d37e1b2689ef5998dabad.svg?invert_in_darkmode" align=middle width=497.8941pt height=38.834895pt/></p>
+in turn requires <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/90846c243bb784093adbb6d2d0b2b9d0.svg?invert_in_darkmode" align=middle width=42.516705pt height=27.5385pt/> time.
+
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
