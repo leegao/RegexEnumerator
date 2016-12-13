@@ -547,6 +547,49 @@ is why this library exists: it automates away the boring parts. In particular, n
    into some other non-ambiguous expression. The resulting regex is usually significantly larger (in terms of state-size), but
    they are equivalent in terms of counting.
 
+#### Rationalizing Reduction
+
+In general, it is not immediately obvious that the expression trees created from regular expressions are rational functions.
+However, if we already know (ahead of time) that a function is rational, we can rationalize the expression into the form
+$$
+\frac{p(z)}{q(z)}
+$$
+(where $p$ and $q$ are not necessarily irreducible) through a pair of mutually inductive reductions.
+
+Suppose that the language of regular expressions of unreduced numerical expressions is given by
+\begin{align*}
+e &= e_1 + e_2 \mid e_1 \times e_2 \mid \frac{e_1}{e_2} \mid -e \mid z \in \mathrm{variables} \mid n \in \mathbb{Q}
+\end{align*}
+we would like to reduce an arbitrary expression $e$ into some $\frac{p}{q}$ where $p,q$ are straightforward polynomials.
+
+To do this, let's start by defining the canonical class of polynomial expressions $p,q$:
+\begin{align*}
+p &= \sum_k n_k \times z^k
+\end{align*}
+
+and define the canonical form of $e \Downarrow_r r$, where
+$$
+r = \frac{p}{q}
+$$
+
+To construct this reduction $\Downarrow_r$, we need another inductive class of the simple ring of polynomials, $\hat p$, defined
+by
+$$
+\hat P = p \mid \hat P_1 + \hat P_2 \mid \hat P_1 \times \hat P_2 \mid - \hat P2
+$$
+with an associated reduction operator $\hat P \Downarrow_p p$ that simplifies arithmetic on polynomials.
+
+Now, let us give the inductive definition of the reduction relations:
+
+* For $e \Downarrow_r \sfrac{p}{q}$
+  $$
+  \begin{array}{c}
+  \frac{~}{x \Downarrow_r \sfrac{x}{1}} ~~~~ \frac{~}{n \Downarrow_r n} ~~~~ \frac{e \Downarrow_r \sfrac{p_1}{p_2} ~~ -p_1 \Downarrow_p p_1'}{-e \Downarrow_r \sfrac{p_1'}{p_2}} \\ ~ \\
+  \frac{e_1 \Downarrow_r \sfrac{n_1}{d_1} ~~ e_2 \Downarrow_r \sfrac{n_2}{d_2} ~~ (n_1 d_2 + n_2 d_1 \Downarrow_p n_3) ~~ d_1 d_2 \Downarrow_p d_3}{e_1 + e_2 \Downarrow_r \sfrac{n_3}{d_3}} \\ ~ \\
+  \frac{e_1 \Downarrow_r \sfrac{n_1}{d_1} ~~ e_2 \Downarrow_r \sfrac{n_2}{d_2} ~~ n_1 n_2 \Downarrow_p n_3 ~~ d_1 d_2 \Downarrow_p d_3}{e_1 \times e_2 \Downarrow_r \sfrac{n_3}{d_3}} \\ ~ \\
+  \frac{e_1 \Downarrow_r \sfrac{n_1}{d_1} ~~ e_2 \Downarrow_r \sfrac{n_2}{d_2} ~~ d_1 n_2 \Downarrow_p n_3 ~~ n_1 d_2 \Downarrow_p d_3}{\sfrac{e_1}{e_2} \Downarrow_r \sfrac{n_3}{d_3}}
+  \end{array}
+  $$
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1

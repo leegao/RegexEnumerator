@@ -464,6 +464,32 @@ is why this library exists: it automates away the boring parts. In particular, n
    into some other non-ambiguous expression. The resulting regex is usually significantly larger (in terms of state-size), but
    they are equivalent in terms of counting.
 
+#### Rationalizing Reduction
+
+In general, it is not immediately obvious that the expression trees created from regular expressions are rational functions.
+However, if we already know (ahead of time) that a function is rational, we can rationalize the expression into the form
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/1c70b94d3328498a6a28622d47fbd2d7.svg?invert_in_darkmode" align=middle width=29.423625pt height=38.834895pt/></p>
+(where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2ec6e630f199f589a2402fdf3e0289d5.svg?invert_in_darkmode" align=middle width=7.765065pt height=14.93184pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d5c18a8ca1894fd3a7d25f242cbe8890.svg?invert_in_darkmode" align=middle width=7.4226075pt height=14.93184pt/> are not necessarily irreducible) through a pair of mutually inductive reductions.
+
+Suppose that the language of regular expressions of unreduced numerical expressions is given by
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d23af21acca0faae913d1a72f67c6bcc.svg?invert_in_darkmode" align=middle width=371.67075pt height=31.939875pt/></p>
+we would like to reduce an arbitrary expression <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8cd34385ed61aca950a6b06d09fb50ac.svg?invert_in_darkmode" align=middle width=7.1486415pt height=14.93184pt/> into some <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6d25c0088d279b5b442786aca8d291fa.svg?invert_in_darkmode" align=middle width=6.263565pt height=25.35192pt/> where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9ee547e0827e5bb29b5feb9f5f574193.svg?invert_in_darkmode" align=middle width=22.99902pt height=14.93184pt/> are straightforward polynomials.
+
+To do this, let's start by defining the canonical class of polynomial expressions <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/9ee547e0827e5bb29b5feb9f5f574193.svg?invert_in_darkmode" align=middle width=22.99902pt height=14.93184pt/>:
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f6e959817dc1f543aa5fc29c2805ef3a.svg?invert_in_darkmode" align=middle width=110.351835pt height=37.032105pt/></p>
+
+and define the canonical form of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a0f90601fb401814382478ecda71d394.svg?invert_in_darkmode" align=middle width=41.478855pt height=23.60787pt/>, where
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/11ae769488435622f7096dfd4cd13625.svg?invert_in_darkmode" align=middle width=40.033785pt height=32.670495pt/></p>
+
+To construct this reduction <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/fec4d30366d4fc888a2f24a5a9b4fc53.svg?invert_in_darkmode" align=middle width=15.997575pt height=23.60787pt/>, we need another inductive class of the simple ring of polynomials, <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/247e6146381bd6874658519e61e6cc5b.svg?invert_in_darkmode" align=middle width=9.10932pt height=23.60787pt/>, defined
+by
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/44d6618766f7333bd286f2dea6d029f1.svg?invert_in_darkmode" align=middle width=229.85655pt height=19.680375pt/></p>
+with an associated reduction operator <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/92fa58483a7d853cff728d148cd4e84d.svg?invert_in_darkmode" align=middle width=47.3781pt height=31.91826pt/> that simplifies arithmetic on polynomials.
+
+Now, let us give the inductive definition of the reduction relations:
+
+* For <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/05f9c4cd6855734f3cc4141abbcdb89d.svg?invert_in_darkmode" align=middle width=52.29972pt height=25.43409pt/>
+  <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5af0b0adba1f6636f5da1c8932a3505c.svg?invert_in_darkmode" align=middle width=309.40305pt height=162.17388pt/></p>
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
