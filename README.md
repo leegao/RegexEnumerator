@@ -29,6 +29,9 @@ Enumerate Regular Expressions the Fun Way.
         * [Fibonacci, Redux](#fibonacci-redux)
      * [Appendix](#appendix)
         * [Library Architecture](#library-architecture)
+        * [Rationalizing Reduction](#rationalizing-reduction)
+        * [Proof that Regular Expressions generate Rational Functions](#proof-that-regular-expressions-generate-rational-functions)
+        * [Exact Enumeration](#exact-enumeration)
         * [Additional Examples](#additional-examples)
 
 -----
