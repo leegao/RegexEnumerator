@@ -2,13 +2,19 @@
 
 Enumerate Regular Expressions the Fun Way.
 
-<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/aa4d414dd40b418624756ba65b24c190.svg?invert_in_darkmode" align=middle width=672.31395pt height=39.45249pt/></p>
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b236ed6d49836f5c92d8157f3937a3ae.svg?invert_in_darkmode" align=middle width=66.004785pt height=18.020145pt/></p>
+
+becomes
+
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/61fa82c0a7ddc04771d7ce2b85e8fc30.svg?invert_in_darkmode" align=middle width=72.51123pt height=30.84411pt/></p>
 
 <p align="center">
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
 
-<sub>*Or how I learned to stop worrying and started counting things with calculus; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
+which tells us that there are <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/08935cbff6db1dcb54959d691f86ffce.svg?invert_in_darkmode" align=middle width=421.600245pt height=45.3321pt/> words of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/> that belongs to this language. 
+
+<sub>*Or how I learned to stop worrying and then lost my mind; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
 
 -----
 
@@ -16,6 +22,7 @@ Enumerate Regular Expressions the Fun Way.
 
 * [Regex Enumerator](#regex-enumerator)
      * [Table of Contents](#table-of-contents)
+     * [Introduction](#introduction)
      * [Installation](#installation)
      * [Usage](#usage)
         * [Regular Expression Syntax](#regular-expression-syntax)
@@ -35,6 +42,8 @@ Enumerate Regular Expressions the Fun Way.
         * [Additional Examples](#additional-examples)
 
 -----
+
+### Introduction
 
 Have you ever wondered about how many different strings you can form that fits your favorite regex?
 

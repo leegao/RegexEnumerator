@@ -3,14 +3,22 @@
 Enumerate Regular Expressions the Fun Way.
 
 $$
-[z^n] \frac{p(z)}{q(z)} = \Theta\left({n + k - 1 \choose k - 1}\rho^{-n}\right) ~~~ \text{where $\rho$ is the smallest root of $q(z)$, and $k$ its multiplicity.}
+(0^+1)^* 0^+
+$$
+
+becomes
+
+$$
+\frac{z}{1 - z - z^2}
 $$
 
 <p align="center">
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
 
-<sub>*Or how I learned to stop worrying and started counting things with calculus; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
+which tells us that there are $\left(- \frac{1}{2} + \frac{\sqrt{5}}{2}\right)^{- n - 1} \left(- \frac{\sqrt{5}}{10} + \frac{1}{2}\right) + \left(- \frac{\sqrt{5}}{2} - \frac{1}{2}\right)^{- n - 1} \left(\frac{\sqrt{5}}{10} + \frac{1}{2}\right)$ words of size $n$ that belongs to this language. 
+
+<sub>*Or how I learned to stop worrying and then lost my mind; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
 
 -----
 
@@ -18,6 +26,7 @@ $$
 
 * [Regex Enumerator](#regex-enumerator)
      * [Table of Contents](#table-of-contents)
+     * [Introduction](#introduction)
      * [Installation](#installation)
      * [Usage](#usage)
         * [Regular Expression Syntax](#regular-expression-syntax)
@@ -37,6 +46,8 @@ $$
         * [Additional Examples](#additional-examples)
 
 -----
+
+### Introduction
 
 Have you ever wondered about how many different strings you can form that fits your favorite regex?
 
