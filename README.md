@@ -8,7 +8,7 @@ Enumerate Regular Expressions the Fun Way.
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
 
-<sub>*Or how I learned to stop worrying and start counting things with calculus*</sub>
+<sub>*Or how I learned to stop worrying and started counting things with calculus; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
 
 -----
 
@@ -27,8 +27,9 @@ Enumerate Regular Expressions the Fun Way.
         * [Univariate Functions](#univariate-functions)
         * [Partial Fraction Decompositions](#partial-fraction-decompositions)
         * [Fibonacci, Redux](#fibonacci-redux)
-     * [Additional Examples](#additional-examples)
-
+     * [Appendix](#appendix)
+        * [Library Architecture](#library-architecture)
+        * [Additional Examples](#additional-examples)
 
 -----
 
@@ -445,7 +446,28 @@ In addition, if you can figure out the multiplicity of <img src="https://rawgit.
 get an exact asymptotic characterization
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d9d51ef1d54ad230bfea7ea95c0a1465.svg?invert_in_darkmode" align=middle width=152.980905pt height=38.834895pt/></p>
 
-### Additional Examples
+### Appendix
+
+#### Library Architecture
+
+It's definitely not too difficult to compute all of this by hand, but the math is really tedious and error prone. This
+is why this library exists: it automates away the boring parts. In particular, nothing really complicated is going on here.
+
+1. `regex_enumerate.parse` has a Shunting-Yard style stack-based parser to convert a regular expression into a regex tree.
+2. `regex_enumerate.transfer` translates a regex tree into its equivalent numerical expression tree. In addition, it includes
+  several algorithms for computations on polynomial rings and can simplify any induced numerical expression into a canonical form
+  of 
+  <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/dc53b77e5ef123b49af9752a7f39f211.svg?invert_in_darkmode" align=middle width=178.46895pt height=38.834895pt/></p>
+  where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/0d77c0b9d12687569adb6493ad31476b.svg?invert_in_darkmode" align=middle width=84.11799pt height=25.43409pt/> is a small polynomial in general and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4dcc632db84650b4f4ed212ad248db1f.svg?invert_in_darkmode" align=middle width=23.289915pt height=33.9834pt/> is irreducible (thus ensuring that all roots of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d5c18a8ca1894fd3a7d25f242cbe8890.svg?invert_in_darkmode" align=middle width=7.4226075pt height=14.93184pt/> are non-removable singularities).
+3. `regex_enumerate.enumerate` has the exact dynamic-programming algorithm referenced above as well as the
+   partial fraction decomposition algorithm to compute the closed-form counting expression.
+4. `regex_enumerate.nfa` contains a set of utility functions to work with the semiring of regular language/finite automata.
+   In particular, it will use a conflict-free characterization of cycles in an automata to compile every regular expression
+   into some other non-ambiguous expression. The resulting regex is usually significantly larger (in terms of state-size), but
+   they are equivalent in terms of counting.
+
+
+#### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
   Its generating function is

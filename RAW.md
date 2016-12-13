@@ -10,7 +10,7 @@ $$
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
 
-<sub>*Or how I learned to stop worrying and start counting things with calculus*</sub>
+<sub>*Or how I learned to stop worrying and started counting things with calculus; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
 
 -----
 
@@ -29,8 +29,9 @@ $$
         * [Univariate Functions](#univariate-functions)
         * [Partial Fraction Decompositions](#partial-fraction-decompositions)
         * [Fibonacci, Redux](#fibonacci-redux)
-     * [Additional Examples](#additional-examples)
-
+     * [Appendix](#appendix)
+        * [Library Architecture](#library-architecture)
+        * [Additional Examples](#additional-examples)
 
 -----
 
@@ -526,7 +527,30 @@ $$
 [z^n]\frac{p(z)}{q(z)} = \Theta(n^k \rho^{-n})
 $$
 
-### Additional Examples
+### Appendix
+
+#### Library Architecture
+
+It's definitely not too difficult to compute all of this by hand, but the math is really tedious and error prone. This
+is why this library exists: it automates away the boring parts. In particular, nothing really complicated is going on here.
+
+1. `regex_enumerate.parse` has a Shunting-Yard style stack-based parser to convert a regular expression into a regex tree.
+2. `regex_enumerate.transfer` translates a regex tree into its equivalent numerical expression tree. In addition, it includes
+  several algorithms for computations on polynomial rings and can simplify any induced numerical expression into a canonical form
+  of 
+  $$
+  [\![e]\!] = \mathrm{Quotient}(z) + \frac{p(z)}{q(z)}
+  $$
+  where $\mathrm{Quotient}(z)$ is a small polynomial in general and $\frac{p(z)}{q(z)}$ is irreducible (thus ensuring that all roots of $q$ are non-removable singularities).
+3. `regex_enumerate.enumerate` has the exact dynamic-programming algorithm referenced above as well as the
+   partial fraction decomposition algorithm to compute the closed-form counting expression.
+4. `regex_enumerate.nfa` contains a set of utility functions to work with the semiring of regular language/finite automata.
+   In particular, it will use a conflict-free characterization of cycles in an automata to compile every regular expression
+   into some other non-ambiguous expression. The resulting regex is usually significantly larger (in terms of state-size), but
+   they are equivalent in terms of counting.
+
+
+#### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
   Its generating function is
