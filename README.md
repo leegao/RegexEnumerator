@@ -489,7 +489,12 @@ with an associated reduction operator <img src="https://rawgit.com/leegao/RegexE
 Now, let us give the inductive definition of the reduction relations:
 
 * For <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/05f9c4cd6855734f3cc4141abbcdb89d.svg?invert_in_darkmode" align=middle width=52.29972pt height=25.43409pt/>
-  <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5af0b0adba1f6636f5da1c8932a3505c.svg?invert_in_darkmode" align=middle width=309.40305pt height=162.17388pt/></p>
+  <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2b2abf6fc82fa5d1ef27efc1032c5ae1.svg?invert_in_darkmode" align=middle width=400.21245pt height=202.9104pt/></p>
+* For <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/92fa58483a7d853cff728d148cd4e84d.svg?invert_in_darkmode" align=middle width=47.3781pt height=31.91826pt/>
+  <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a3cc4d671ad1b63e919f898b70f87921.svg?invert_in_darkmode" align=middle width=363.52635pt height=201.2241pt/></p>
+
+This pair of reduction rules are implemented in `regex_enumerate.transfer.down_r` and `regex_enumerate.transfer.down_p`
+respectively.
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1

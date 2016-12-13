@@ -582,14 +582,21 @@ with an associated reduction operator $\hat P \Downarrow_p p$ that simplifies ar
 Now, let us give the inductive definition of the reduction relations:
 
 * For $e \Downarrow_r \sfrac{p}{q}$
-  $$
-  \begin{array}{c}
+  \begin{gather*}
   \frac{~}{x \Downarrow_r \sfrac{x}{1}} ~~~~ \frac{~}{n \Downarrow_r n} ~~~~ \frac{e \Downarrow_r \sfrac{p_1}{p_2} ~~ -p_1 \Downarrow_p p_1'}{-e \Downarrow_r \sfrac{p_1'}{p_2}} \\ ~ \\
   \frac{e_1 \Downarrow_r \sfrac{n_1}{d_1} ~~ e_2 \Downarrow_r \sfrac{n_2}{d_2} ~~ (n_1 d_2 + n_2 d_1 \Downarrow_p n_3) ~~ d_1 d_2 \Downarrow_p d_3}{e_1 + e_2 \Downarrow_r \sfrac{n_3}{d_3}} \\ ~ \\
   \frac{e_1 \Downarrow_r \sfrac{n_1}{d_1} ~~ e_2 \Downarrow_r \sfrac{n_2}{d_2} ~~ n_1 n_2 \Downarrow_p n_3 ~~ d_1 d_2 \Downarrow_p d_3}{e_1 \times e_2 \Downarrow_r \sfrac{n_3}{d_3}} \\ ~ \\
   \frac{e_1 \Downarrow_r \sfrac{n_1}{d_1} ~~ e_2 \Downarrow_r \sfrac{n_2}{d_2} ~~ d_1 n_2 \Downarrow_p n_3 ~~ n_1 d_2 \Downarrow_p d_3}{\sfrac{e_1}{e_2} \Downarrow_r \sfrac{n_3}{d_3}}
-  \end{array}
-  $$
+  \end{gather*}
+* For $\hat P \Downarrow_p p$
+  \begin{gather*}
+  \frac{~}{p \Downarrow_p p} ~~~~ \frac{\hat P_1 \Downarrow_p p_1 ~~ \hat P_2 \Downarrow_p p_2 ~~ p_3 = \textrm{PolyAdd}(p_1, p_2)}{\hat P_1 + \hat P_2 \Downarrow_p p_3} \\ ~ \\
+  \frac{\hat P_1 \Downarrow_p p_1 ~~ \hat P_2 \Downarrow_p p_2 ~~ p_3 = \textrm{PolyMul}(p_1, p_2)}{\hat P_1 \times \hat P_2 \Downarrow_p p_3} \\ ~ \\
+  \frac{\hat P \Downarrow_p p ~~ p' = \textrm{PolyNeg}(p)}{-\hat P \Downarrow_p p'}
+  \end{gather*}
+
+This pair of reduction rules are implemented in `regex_enumerate.transfer.down_r` and `regex_enumerate.transfer.down_p`
+respectively.
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1

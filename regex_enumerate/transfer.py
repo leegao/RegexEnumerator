@@ -71,41 +71,43 @@ def rationalize(ast):
     :param ast
     :return: A pair of polynomials that forms the rational function.
     '''
-    def down_r(ast):
-        t, data = ast
-        if t == 'var':
-            return ('v', {1 : 1}), ('v', {0 : 1})
-        if t == 'num':
-            return ('v', {0 : data}), ('v', {0 : 1})
-        if t == '-':
-            n, d = down_r(data)
-            n_ = down_p(('-', n))
-            return n_, d
-        if t == '+':
-            assert len(data) == 2
-            n1, d1 = down_r(data[0])
-            n2, d2 = down_r(data[1])
-            n3 = down_p(('+', [('*', [n1, d2]), ('*', [n2, d1])]))
-            d3 = down_p(('*', [d1, d2]))
-            return n3, d3
-        if t == '*':
-            assert len(data) == 2
-            n1, d1 = down_r(data[0])
-            n2, d2 = down_r(data[1])
-            n3 = down_p(('*', [n1, n2]))
-            d3 = down_p(('*', [d1, d2]))
-            return n3, d3
-        if t == '/':
-            assert len(data) == 2
-            n1, d1 = down_r(data[0])
-            n2, d2 = down_r(data[1])
-            n3 = down_p(('*', [n1, d2]))
-            d3 = down_p(('*', [d1, n2]))
-            return n3, d3
-        raise Exception("IllegalState")
 
     (_, p), (_, q) = down_r(ast)
     return process(p), process(q)
+
+
+def down_r(ast):
+    t, data = ast
+    if t == 'var':
+        return ('v', {1: 1}), ('v', {0: 1})
+    if t == 'num':
+        return ('v', {0: data}), ('v', {0: 1})
+    if t == '-':
+        n, d = down_r(data)
+        n_ = down_p(('-', n))
+        return n_, d
+    if t == '+':
+        assert len(data) == 2
+        n1, d1 = down_r(data[0])
+        n2, d2 = down_r(data[1])
+        n3 = down_p(('+', [('*', [n1, d2]), ('*', [n2, d1])]))
+        d3 = down_p(('*', [d1, d2]))
+        return n3, d3
+    if t == '*':
+        assert len(data) == 2
+        n1, d1 = down_r(data[0])
+        n2, d2 = down_r(data[1])
+        n3 = down_p(('*', [n1, n2]))
+        d3 = down_p(('*', [d1, d2]))
+        return n3, d3
+    if t == '/':
+        assert len(data) == 2
+        n1, d1 = down_r(data[0])
+        n2, d2 = down_r(data[1])
+        n3 = down_p(('*', [n1, d2]))
+        d3 = down_p(('*', [d1, n2]))
+        return n3, d3
+    raise Exception("IllegalState")
 
 
 def down_p(ast):
