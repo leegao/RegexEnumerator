@@ -420,6 +420,31 @@ a couple of lines long. It's actually a really simple idea.
 
 #### Fibonacci, Redux
 
+Let's come back to our favorite example once more. Given the regular expression <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3379fa0e924be5123ee64e1f421a6deb.svg?invert_in_darkmode" align=middle width=66.93753pt height=26.95407pt/>, we know that it has the
+generating function
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d246479c1e11056e3eec08efd05a84f6.svg?invert_in_darkmode" align=middle width=306.89505pt height=33.58377pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/910f819b1d6c9bf336c25bc5345df020.svg?invert_in_darkmode" align=middle width=98.746395pt height=33.98736pt/> are the roots of the quadratic equation <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3cc39928a4ebb8f13a9f49054471ee59.svg?invert_in_darkmode" align=middle width=102.14259pt height=27.5385pt/>. We know that this
+admits a partial fraction decomposition of
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/0827a49d6b346954aed332b700cd9fdf.svg?invert_in_darkmode" align=middle width=311.5695pt height=78.99408pt/></p>
+therefore <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/84e844b383c9257a41794dfa105758c9.svg?invert_in_darkmode" align=middle width=156.285195pt height=25.43409pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/15a33695022d67cbc910abf1007bc517.svg?invert_in_darkmode" align=middle width=140.55129pt height=23.60787pt/>. Solving this linear system
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/32995b846087bc4805747e48d4e72228.svg?invert_in_darkmode" align=middle width=246.9753pt height=39.45249pt/></p>
+will yield the coefficients <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6c2c48406a5f21d3e7eb2c6f15b824cf.svg?invert_in_darkmode" align=middle width=26.54454pt height=14.93184pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/46ad6e581ba2202a520dbe64748603c5.svg?invert_in_darkmode" align=middle width=27.751845pt height=14.93184pt/>, and you'll find that
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/23ff9545b6fda5cbf8af03fc5f2503be.svg?invert_in_darkmode" align=middle width=594.7194pt height=52.667175pt/></p>
+
+In addition, if you plot the generating function <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/65e60fac43981f156ec935ea689c64d7.svg?invert_in_darkmode" align=middle width=46.50789pt height=23.62998pt/> (as is in picture at the top of this page):
+<p align="center">
+<img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
+</p>
+you'll find that the singularities (the points where the graph suddenly jumps up and forms an infinitely tall column) are
+located exactly at where the roots of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3cc39928a4ebb8f13a9f49054471ee59.svg?invert_in_darkmode" align=middle width=102.14259pt height=27.5385pt/> are found. This isn't surprising, since by the fact that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/65e60fac43981f156ec935ea689c64d7.svg?invert_in_darkmode" align=middle width=46.50789pt height=23.62998pt/>
+is irreducible, the roots of the denominator must be non-removable singularities! In fact, if all you cared about is the
+asymptotic exponential behavior, then there's a simple graphical method to compute the asymptotic complexity of enumerating
+your regular expression. Take <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6dec54c48a0438a5fcde6053bdb9d712.svg?invert_in_darkmode" align=middle width=7.993425pt height=14.93184pt/> to be the root of the denominator that is closest to the origin on the complex plane, then
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d27af326c61370ef2bf5c335e915ba52.svg?invert_in_darkmode" align=middle width=138.679035pt height=38.834895pt/></p>
+In addition, if you can figure out the multiplicity of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6dec54c48a0438a5fcde6053bdb9d712.svg?invert_in_darkmode" align=middle width=7.993425pt height=14.93184pt/> (repeatedly divide out <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/17f7467ecdc06a6fd94ee61a8ccf8f79.svg?invert_in_darkmode" align=middle width=36.45213pt height=19.95477pt/> until that column disappears), you can
+get an exact asymptotic characterization
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d9d51ef1d54ad230bfea7ea95c0a1465.svg?invert_in_darkmode" align=middle width=152.980905pt height=38.834895pt/></p>
+
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 

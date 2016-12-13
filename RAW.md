@@ -490,6 +490,42 @@ a couple of lines long. It's actually a really simple idea.
 
 #### Fibonacci, Redux
 
+Let's come back to our favorite example once more. Given the regular expression $(x^+,)^*x^+$, we know that it has the
+generating function
+$$
+[\![(x^+,)^*x^+]\!] = \frac{z}{1 - z - z^2} = \frac{z}{(z - \phi)(z - \psi)}
+$$
+where $\phi,\psi = -\frac{1 \pm \sqrt{5}}{2}$ are the roots of the quadratic equation $1 - z - z^2 = 0$. We know that this
+admits a partial fraction decomposition of
+\begin{align*}
+\frac{z}{(z - \phi)(z - \psi)} &= \frac{a_{\phi, 1}}{z - \phi} + \frac{a_{\psi, 1}}{z - \psi} \\
+&= \frac{a_{\phi, 1}(z - \psi) + a_{\psi, 1}(z - \psi)}{(z - \phi)(z - \psi)}
+\end{align*}
+therefore $(a_{\phi, 1} + a_{\psi, 1})z = 1 \times z$ and $-a_{\phi,1}\psi -a_{\psi,1}\phi = 0$. Solving this linear system
+$$
+\left(\begin{array}{cc}1 & 1 \\ -\psi & -\phi\end{array}\right) \left(\begin{array}{c}a_{\phi,1} \\ a_{\psi,1}\end{array}\right) = \left(\begin{array}{c}1 \\ 0\end{array}\right)
+$$
+will yield the coefficients $a_{\phi,1}$ and $a_{\psi,1}$, and you'll find that
+$$
+[z^n][\![(x^+,)^*x^+]\!] = \left(- \frac{1}{2} + \frac{\sqrt{5}}{2}\right)^{- n - 1} \left(- \frac{\sqrt{5}}{10} + \frac{1}{2}\right) + \left(- \frac{\sqrt{5}}{2} - \frac{1}{2}\right)^{- n - 1} \left(\frac{\sqrt{5}}{10} + \frac{1}{2}\right)
+$$
+
+In addition, if you plot the generating function $\frac{z}{1 - z - z^2}$ (as is in picture at the top of this page):
+<p align="center">
+<img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
+</p>
+you'll find that the singularities (the points where the graph suddenly jumps up and forms an infinitely tall column) are
+located exactly at where the roots of $1 - z - z^2 = 0$ are found. This isn't surprising, since by the fact that $\frac{z}{1 - z - z^2}$
+is irreducible, the roots of the denominator must be non-removable singularities! In fact, if all you cared about is the
+asymptotic exponential behavior, then there's a simple graphical method to compute the asymptotic complexity of enumerating
+your regular expression. Take $\rho$ to be the root of the denominator that is closest to the origin on the complex plane, then
+$$[z^n]\frac{p(z)}{q(z)} = \Omega(\rho^{-n}).$$
+In addition, if you can figure out the multiplicity of $\rho$ (repeatedly divide out $z - \rho$ until that column disappears), you can
+get an exact asymptotic characterization
+$$
+[z^n]\frac{p(z)}{q(z)} = \Theta(n^k \rho^{-n})
+$$
+
 ### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
