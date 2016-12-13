@@ -2,17 +2,16 @@
 
 Enumerate Regular Expressions the Fun Way.
 
-<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b236ed6d49836f5c92d8157f3937a3ae.svg?invert_in_darkmode" align=middle width=66.004785pt height=18.020145pt/></p>
-
-becomes
-
+The regular expression <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/f9d2f9a74a3d1a9fc852220717fcbd49.svg?invert_in_darkmode" align=middle width=65.49939pt height=26.95407pt/> becomes
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/61fa82c0a7ddc04771d7ce2b85e8fc30.svg?invert_in_darkmode" align=middle width=72.51123pt height=30.84411pt/></p>
 
 <p align="center">
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
 
-which tells us that there are <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/08935cbff6db1dcb54959d691f86ffce.svg?invert_in_darkmode" align=middle width=421.600245pt height=45.3321pt/> words of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/> that belongs to this language. 
+which tells us that there are <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/08935cbff6db1dcb54959d691f86ffce.svg?invert_in_darkmode" align=middle width=421.600245pt height=45.3321pt/> words of size <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/> in this language.
+
+Regex Enumerator takes in a regular expression, and spits out a closed-form formula for the number of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/>-letter words in your language.
 
 <sub>*Or how I learned to stop worrying and then lost my mind; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
 

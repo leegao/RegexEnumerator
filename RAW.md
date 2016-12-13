@@ -2,12 +2,7 @@
 
 Enumerate Regular Expressions the Fun Way.
 
-$$
-(0^+1)^* 0^+
-$$
-
-becomes
-
+The regular expression $(0^+1)^* 0^+$ becomes
 $$
 \frac{z}{1 - z - z^2}
 $$
@@ -16,7 +11,9 @@ $$
 <img src="http://i.imgur.com/sRo5tQz.png?invert_in_darkmode"/>
 </p>
 
-which tells us that there are $\left(- \frac{1}{2} + \frac{\sqrt{5}}{2}\right)^{- n - 1} \left(- \frac{\sqrt{5}}{10} + \frac{1}{2}\right) + \left(- \frac{\sqrt{5}}{2} - \frac{1}{2}\right)^{- n - 1} \left(\frac{\sqrt{5}}{10} + \frac{1}{2}\right)$ words of size $n$ that belongs to this language. 
+which tells us that there are $\left(- \frac{1}{2} + \frac{\sqrt{5}}{2}\right)^{- n - 1} \left(- \frac{\sqrt{5}}{10} + \frac{1}{2}\right) + \left(- \frac{\sqrt{5}}{2} - \frac{1}{2}\right)^{- n - 1} \left(\frac{\sqrt{5}}{10} + \frac{1}{2}\right)$ words of size $n$ in this language.
+
+Regex Enumerator takes in a regular expression, and spits out a closed-form formula for the number of $n$-letter words in your language.
 
 <sub>*Or how I learned to stop worrying and then lost my mind; TeX rendered using [readme2tex](https://github.com/leegao/readme2tex)*</sub>
 
