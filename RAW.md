@@ -36,6 +36,7 @@ Regex Enumerator takes in a regular expression, and spits out a closed-form form
         * [Rationalizing Reduction](#rationalizing-reduction)
         * [Proof that Regular Expressions generate Rational Functions](#proof-that-regular-expressions-generate-rational-functions)
         * [Exact Enumeration](#exact-enumeration)
+        * [Are there other ways to do this?](#are-there-other-ways-to-do-this)
         * [Additional Examples](#additional-examples)
 
 -----
@@ -647,6 +648,42 @@ $$
 [z^n] \frac{p(z)}{1 - (1 - q(z))} = [z^n] p(z) - [z^n] p(z) q(z) + [z^n] (p(z) q(z)) q(z) + \cdots
 $$
 in turn requires $O(n^3)$ time.
+
+#### Are there other ways to do this?
+
+Yes. In fact, one common transformation people do on regular expressions is compiling them down into some
+deterministic finite automata. A DFA is inherently ambiguity free since every path through a DFA must correspond to a
+different word in the language; otherwise there's some state $s$ such that it can transition to two different states on the
+same input, which is impossible since DFAs are, well, deterministic. This then solves the problem of having to specify an
+unambiguous grammar: all DFAs are unambiguous.
+
+A DFA is a triple $(V \subset \mathbb{N}, E \subset \mathbb{N}^2, \alpha)$ where $(V, E)$ gives the graph underlying the DFA and $\alpha : E \to [\Sigma]$ labels each
+edge with (zero or more) letters it can transition on.
+
+Given a DFA, we can also solve the same problem. Suppose that $\alpha(u, v) = 0$ if $(u, v) \not\in E$, then we can construct a matrix
+$$
+A_{E\alpha} = \left(\begin{array}{cccc}
+\alpha(1, 1) & \alpha(2, 1) & \cdots & \alpha(n, 1) \\
+\alpha(1, 2) & \alpha(2, 2) & \ddots & \alpha(n, 2) \\
+\vdots & \vdots & \vdots & \vdots \\
+\alpha(1, n) & \alpha(2, n) & \cdots & \alpha(n, n)
+\end{array}\right)
+$$
+where $A_{E\alpha}$ is the incidence matrix of $E$ (transposed), but tracking the in-degree instead of just whether $u \to v$ is an edge.
+
+Then, we can calculate the count of all $n$-letter words in $\mathcal{L}$ induced by the DFA via
+$$
+e_1^T A_{E\alpha}^n e_1
+$$
+where $e_1$ is the first column of the identity. Given an eigenvalue decomposition, this will then reduce to solving a linear
+system fitting
+$$
+\sum_i \sum_{k}^{\textrm{multiplicity}(\lambda_i)} a_{i,k} {n + k - 1 \choose k - 1} \lambda_i^n
+$$
+
+This has several advantages, but numerical enumerations of the eigenvalues of a linear system is particularly sensitive to
+any perturbations. Nevertheless, this is an elegant approach that solves one of the biggest issues of the current technique, and
+all without doing more than simple linear algebra (plus NFA determinization, which is hard).
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1

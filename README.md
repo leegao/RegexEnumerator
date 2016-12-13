@@ -36,6 +36,7 @@ Regex Enumerator takes in a regular expression, and spits out a closed-form form
         * [Rationalizing Reduction](#rationalizing-reduction)
         * [Proof that Regular Expressions generate Rational Functions](#proof-that-regular-expressions-generate-rational-functions)
         * [Exact Enumeration](#exact-enumeration)
+        * [Are there other ways to do this?](#are-there-other-ways-to-do-this)
         * [Additional Examples](#additional-examples)
 
 -----
@@ -522,6 +523,31 @@ dynamic program. We will in turn focus on the problem of computing
 where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8c58e0aff8d238accd8704a6307fd3d0.svg?invert_in_darkmode" align=middle width=92.782305pt height=28.68921pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/54ab499713ae84b672c4d71e0341662a.svg?invert_in_darkmode" align=middle width=128.30763pt height=28.68921pt/> are subproblems. Computing
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b00d1bba617d37e1b2689ef5998dabad.svg?invert_in_darkmode" align=middle width=497.8941pt height=38.834895pt/></p>
 in turn requires <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/90846c243bb784093adbb6d2d0b2b9d0.svg?invert_in_darkmode" align=middle width=42.516705pt height=27.5385pt/> time.
+
+#### Are there other ways to do this?
+
+Yes. In fact, one common transformation people do on regular expressions is compiling them down into some
+deterministic finite automata. A DFA is inherently ambiguity free since every path through a DFA must correspond to a
+different word in the language; otherwise there's some state <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6f9bad7347b91ceebebd3ad7e6f6f2d1.svg?invert_in_darkmode" align=middle width=7.1999895pt height=14.93184pt/> such that it can transition to two different states on the
+same input, which is impossible since DFAs are, well, deterministic. This then solves the problem of having to specify an
+unambiguous grammar: all DFAs are unambiguous.
+
+A DFA is a triple <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a1da7b9acd7b59ed5fd7db502e19fcd0.svg?invert_in_darkmode" align=middle width=138.74652pt height=27.5385pt/> where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2202c0f5cdac36b220fa287329211a21.svg?invert_in_darkmode" align=middle width=43.17027pt height=25.43409pt/> gives the graph underlying the DFA and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/89ec055aad5ad570dc830795e14b0424.svg?invert_in_darkmode" align=middle width=83.426805pt height=25.43409pt/> labels each
+edge with (zero or more) letters it can transition on.
+
+Given a DFA, we can also solve the same problem. Suppose that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d1c3f071b8d2d57fc7501f50202a2a9d.svg?invert_in_darkmode" align=middle width=78.267255pt height=25.43409pt/> if <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/27fdb1e3463ed9d904dcf49f9ec69cac.svg?invert_in_darkmode" align=middle width=70.72725pt height=25.43409pt/>, then we can construct a matrix
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/95c91b30f66b18f7f06bf2a1ab0c59d7.svg?invert_in_darkmode" align=middle width=318.2454pt height=98.63106pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ea9b0a8ce2baf9845a4802579852d9ac.svg?invert_in_darkmode" align=middle width=30.65238pt height=23.24256pt/> is the incidence matrix of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/84df98c65d88c6adf15d4645ffa25e47.svg?invert_in_darkmode" align=middle width=12.57663pt height=23.24256pt/> (transposed), but tracking the in-degree instead of just whether <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/6b98b36192d4b642bf1d045d0f117747.svg?invert_in_darkmode" align=middle width=43.03332pt height=14.93184pt/> is an edge.
+
+Then, we can calculate the count of all <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/55a049b8f161ae7cfeb0197d75aff967.svg?invert_in_darkmode" align=middle width=9.36144pt height=14.93184pt/>-letter words in <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/47291815667dfe5994c54805102e144b.svg?invert_in_darkmode" align=middle width=10.832415pt height=23.24256pt/> induced by the DFA via
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/0a401d3e4870b3647cd7ab9ab528d017.svg?invert_in_darkmode" align=middle width=64.19622pt height=18.714135pt/></p>
+where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/add566ef276cab0dc7347620a8377612.svg?invert_in_darkmode" align=middle width=13.70127pt height=14.93184pt/> is the first column of the identity. Given an eigenvalue decomposition, this will then reduce to solving a linear
+system fitting
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/e2866369356bc80662b5332f2e36d33c.svg?invert_in_darkmode" align=middle width=253.33935pt height=50.365425pt/></p>
+
+This has several advantages, but numerical enumerations of the eigenvalues of a linear system is particularly sensitive to
+any perturbations. Nevertheless, this is an elegant approach that solves one of the biggest issues of the current technique, and
+all without doing more than simple linear algebra (plus NFA determinization, which is hard).
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
