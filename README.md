@@ -36,7 +36,6 @@ Regex Enumerator takes in a regular expression, and spits out a closed-form form
         * [Rationalizing Reduction](#rationalizing-reduction)
         * [Proof that Regular Expressions generate Rational Functions](#proof-that-regular-expressions-generate-rational-functions)
         * [Exact Enumeration](#exact-enumeration)
-        * [Disambiguation Algorithm](#disambiguation-algorithm)
         * [Additional Examples](#additional-examples)
 
 -----
@@ -188,47 +187,6 @@ regex = '({e}{e}*,)*{e}{e}*'.format(e = e)
   # a(n) = s(1)t(n) + s(2)t(n-1) + : https://oeis.org/A024595
   ```
 
-* `disambiguate(regex)`: *[Experimental]* attempts to construct an unambiguous regular expression. In many cases,
-  regular expressions are ambiguous. For example, <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/a5e47a69368560eb1f96acf425b6b4da.svg?invert_in_darkmode" align=middle width=42.416715pt height=25.43409pt/> is a classic example. Ambiguities is the source of
-  redundancy, and unfortunately, our enumeration methods won't understand that the redundant components are already
-  taken care of, and will count the same word multiple times. Therefore, care must be taken to to ensure that the 
-  regular expression is unambiguous.
-  
-  This is an experimental algorithm that reduces any regular expression into an ambiguity free form. The cost is a
-  potentially exponential blow-up in the size of your regular expression. However, for most of the simple cases, this
-  is alright.
-  
-  ```python
-  from regex_enumerate import disambiguate, enumerate_coefficients
-  from itertools import islice
-  
-  # 0*0* is equivalent to just 0*
-  print(list(islice(enumerate_coefficients('0*0*'), 10)))
-  # [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-  
-  # Let's disambiguate this problem
-  print(list(islice(enumerate_coefficients(disambiguate('0*0*')), 10)))
-  # [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-  ```
-  
-  In general, this should work. However, it does require a fair bit of term-rewriting to
-  ensure that some of the intermediate steps can be reduced properly. Therefore, if something
-  seems fishy, you can always inspect the reconstructed DFA and its disambiguation form
-  <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d507b0de6241f92619c33714931ba5f0.svg?invert_in_darkmode" align=middle width=60.00258pt height=28.43346pt/>, which will be described below.
-  
-  ```python
-  from regex_enumerate import compile_disambiguously, reduce
-  from random import sample
-  R, dfa, accepts, number_of_states = compile_disambiguously("0*0*")
-  # The states are arbitrarily ordered, so we can say that a state u < v when its 'id' is less than that of the others.
-  
-  # R(u, v, k) is the regular expression that allows an automaton to transition from u to v using only nodes
-  # [1, ..., k] in its intermediate steps.
-  print(R(1, *sample(accepts), 3)) # 1 -> ...(<3) -> some random final state
-  print(R(1, *sample(accepts), number_of_states)) # Regex describing all the ways of getting from start (node 1) to some final state
-  # Additionally, R(u, v, k) is designed to be mutually orthogonal, so R(u, v, k) + R(u, v', k) is unambiguous
-  ```
-
 In addition, regular expressions correspond to the family of rational functions (quotient of two polynomials).
 To see the generating function of a regular expression, try
 
@@ -252,10 +210,10 @@ this poses no challenges to parsing (since we don't output a parse-tree), it doe
 In particular, the direct translation of this expression will claim that there are 2 strings of size 1
 in this language.
 
-To remedy this, you can try to use `regex_enumerate.disambiguate(regex)`, but it's not completely clear
+[](To remedy this, you can try to use `regex_enumerate.disambiguate(regex)`, but it's not completely clear
 that this is correct. Therefore, know that
 for some regular expressions, this technique will fail unless you manually reduce it to an unambiguous form.
-There is always a way to do this, though it might create an exponential number of additional states.
+There is always a way to do this, though it might create an exponential number of additional states.)
 
 ### Justification
 
@@ -564,10 +522,6 @@ dynamic program. We will in turn focus on the problem of computing
 where <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8c58e0aff8d238accd8704a6307fd3d0.svg?invert_in_darkmode" align=middle width=92.782305pt height=28.68921pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/54ab499713ae84b672c4d71e0341662a.svg?invert_in_darkmode" align=middle width=128.30763pt height=28.68921pt/> are subproblems. Computing
 <p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/b00d1bba617d37e1b2689ef5998dabad.svg?invert_in_darkmode" align=middle width=497.8941pt height=38.834895pt/></p>
 in turn requires <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/90846c243bb784093adbb6d2d0b2b9d0.svg?invert_in_darkmode" align=middle width=42.516705pt height=27.5385pt/> time.
-
-#### Disambiguation Algorithm
-
-TBA.
 
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1

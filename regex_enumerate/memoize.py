@@ -30,4 +30,4 @@ except ImportError:
        def __get__(self, obj, objtype):
           '''Support instance methods.'''
           return functools.partial(self.__call__, obj)
-    memoized = lambda n: memoized_wrapper
+    memoized = lambda: memoized_wrapper
