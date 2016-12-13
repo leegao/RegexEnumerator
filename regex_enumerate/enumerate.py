@@ -2,12 +2,14 @@ from collections import defaultdict
 
 import itertools
 import mpmath
-from numpy import array
-from numpy.linalg import solve, norm
+from numpy import array, zeros, eye, matmul
+from numpy.linalg import solve, norm, eigvals, matrix_power, det
 from numpy.polynomial import Polynomial as P
 from scipy.special import comb
 from sympy import nsimplify, sympify, binomial, DiracDelta
 
+from regex_enumerate.nfa import determinize, reconstruct, compile
+from regex_enumerate.parse import parse
 from regex_enumerate.transfer import transfer, rationalize, simplify, process, down_p, mul, leading_term
 
 from itertools import islice
@@ -195,9 +197,9 @@ def enumerate_coefficients(regex, what = None, threshold = 1e-3):
 def inverse_symbolic(n, threshold=1e-5):
     rl = mpmath.identify(n.real, tol=1e-3, maxcoeff=30)
     im = mpmath.identify(n.imag, tol=1e-3, maxcoeff=30)
-    if not rl or abs(n.real - float(nsimplify(rl))) > threshold:
+    if not rl or abs(n.real - (nsimplify(rl).evalf())) > threshold:
         rl = nsimplify(n.real).evalf(5)
-    if not im or abs(n.imag - float(nsimplify(im))) > threshold:
+    if not im or abs(n.imag - (nsimplify(im).evalf())) > threshold:
         im = nsimplify(n.imag).evalf(5)
     return (sympify(rl) + sympify(im) * 1j)
 
@@ -250,6 +252,38 @@ def check_on_oeis(regex, what = None, start = 0, window = 10):
         raise NotImplementedError("Cannot find pyoeis. Make sure that it is installed.")
     return pyoeis.OEISClient().lookup_by_terms(sequence, max_seqs=20)
 
+
+def matrix_method(regex, threshold=1e-3):
+    nfa = compile(parse(regex))
+    dfa = determinize(nfa)
+    _, dfa, accepts, num_states = reconstruct(*dfa)
+    A = zeros((num_states, num_states))
+    e_1 = eye(num_states, 1)
+    e_accepts = array([1 if i + 1 in accepts else 0 for i in range(num_states)])
+    for (u, v, _) in dfa: A[v - 1, u - 1] += 1
+    eigenvalues = eigvals(A)
+    clusters = cluster_roots(lambda root: det(A - root * eye(num_states)), eigenvalues, threshold)
+    clusters = {root : key for root, key in clusters.items() if abs(root) > threshold ** 2}
+    collection = collate(clusters)
+    degree = len(collection)
+    exact = lambda n: matmul(e_accepts, matmul(matrix_power(A, n), e_1))
+    basis = lambda n: array([comb(n+k-1, k-1) * root**(n-k) for (root, k) in collate(clusters)])
+    vandermonde_matrix = array([basis(num_states + n) for n in range(degree)])
+    target = array([exact(num_states + n) for n in range(degree)])
+    partial_coefficients = solve(vandermonde_matrix, target)
+    n = sympify('n')
+    series = 0
+    for i, (root, k) in enumerate(collection):
+        symbolic_root = inverse_symbolic(root)
+        partial_coefficient = inverse_symbolic(partial_coefficients[i][0])
+        series += partial_coefficient * binomial(n + k - 1, k - 1) * (symbolic_root ** (n - k))
+    for i in range(num_states):
+        delta = exact(i)[0] - evaluate_expression(series, i)
+        series += DiracDelta(n - i) * delta
+    return series
+
+
+
 if __name__ == '__main__':
     from sympy import latex
 
@@ -258,16 +292,20 @@ if __name__ == '__main__':
         "(%|1|11)(00*(1|11))*0* | 1", # complete 1 or 11-separated strings
         "(000)*(111)*(22)*(33)*(44)*", # complex root to (1 - z**3)**-2 * (1 - z**2)**-3
         "1*(22)*(333)*(4444)*(55555)*",  # number of ways to make change give coins of denomination 1 2 3 4 and 5
-        "11*" * 5,  # 5 compositions of n
-        "(11*)*",  # all compositions of n
+        "01*" * 5,  # 5 compositions of n
+        "(01*)*",  # all compositions of n
         "a*b*c*(dd)*|e",
         "(00*1)*00*",
     ]
     for regex in regexes:
         print("Checking %s." % regex)
         exact_form = list(islice(exact_coefficients(regex), 20))
-        algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 20))
-        print("Expecting %s,\nActual    %s." % (exact_form, algebraic))
-        print("It's algebraic form is %s" % algebraic_form(regex))
-        print(latex(algebraic_form(regex)))
-        print()
+        # algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 20))
+        # print("Expecting %s,\nActual    %s." % (exact_form, algebraic))
+        # print("It's algebraic form is %s" % algebraic_form(regex))
+        # print(latex(algebraic_form(regex)))
+        # print()
+        series = matrix_method(regex)
+        print('Expecting:', exact_form)
+        print('Actual:', [int(round(abs(evaluate_expression(series, i).evalf()))) for i in range(20)])
+        print('Series:', latex(series))
