@@ -496,6 +496,41 @@ Now, let us give the inductive definition of the reduction relations:
 This pair of reduction rules are implemented in `regex_enumerate.transfer.down_r` and `regex_enumerate.transfer.down_p`
 respectively.
 
+#### Proof that Regular Expressions generate Rational Functions
+
+**Theorem**: The translation <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5895759cc417e03c35a06eed530a6b55.svg?invert_in_darkmode" align=middle width=19.934145pt height=25.43409pt/> given by
+<p align="center"><img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/11ee0316063ace518d778eaeb39076b8.svg?invert_in_darkmode" align=middle width=154.17831pt height=135.89433pt/></p>
+only generates rational functions.
+
+*Proof*: By structural induction on <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8cd34385ed61aca950a6b06d09fb50ac.svg?invert_in_darkmode" align=middle width=7.1486415pt height=14.93184pt/>.
+
+* *Case <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/e3929748b4465c3e555d95442a6bb988.svg?invert_in_darkmode" align=middle width=35.73867pt height=14.93184pt/>*: 
+  
+  <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2d48d00fa1f71b1f12f5fec43cb96b0d.svg?invert_in_darkmode" align=middle width=50.071065pt height=25.43409pt/>, which is rational.
+  
+* *Case <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/2ae85fa2e0f181215be7b9dda465e24b.svg?invert_in_darkmode" align=middle width=70.42464pt height=23.24256pt/>*: 
+  
+  <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/444a308e151f7cb44e1e411ccd810cd4.svg?invert_in_darkmode" align=middle width=51.246855pt height=25.43409pt/>, which is rational.
+  
+* *Case <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/3c6f4e649f3f0d5a2a028998942f5912.svg?invert_in_darkmode" align=middle width=71.999895pt height=25.43409pt/>*: 
+
+  <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/fdd6473fb799c36afb458982ac2f8729.svg?invert_in_darkmode" align=middle width=117.57141pt height=25.43409pt/>. Now, by the induction hypothesis, both <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/34c64bc38d576730626fa5aa3714344c.svg?invert_in_darkmode" align=middle width=27.308655pt height=25.43409pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d706487e1904c4e87350e5bc11eb1bb8.svg?invert_in_darkmode" align=middle width=27.308655pt height=25.43409pt/> are
+  rational. Since the sum of two rational functions is still rational, so too is <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5895759cc417e03c35a06eed530a6b55.svg?invert_in_darkmode" align=middle width=19.934145pt height=25.43409pt/>.
+
+* *Case <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5b6e3c5157329f32f482be7e344cde50.svg?invert_in_darkmode" align=middle width=58.301595pt height=14.93184pt/>*
+
+  <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/ac9b88f9f11fbdcb5866781772de811e.svg?invert_in_darkmode" align=middle width=117.57141pt height=25.43409pt/>. Again, by the induction hypothesis, both <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/34c64bc38d576730626fa5aa3714344c.svg?invert_in_darkmode" align=middle width=27.308655pt height=25.43409pt/> and <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/d706487e1904c4e87350e5bc11eb1bb8.svg?invert_in_darkmode" align=middle width=27.308655pt height=25.43409pt/> 
+  are rational. Since the product of two rational functions is still rational, so too is <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5895759cc417e03c35a06eed530a6b55.svg?invert_in_darkmode" align=middle width=19.934145pt height=25.43409pt/>.
+  
+* *Case <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c2ca80b949799b333e1fc5997782f831.svg?invert_in_darkmode" align=middle width=43.455555pt height=23.41515pt/>*
+
+  <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/c2c77116ee42406e83a2349db4655f34.svg?invert_in_darkmode" align=middle width=83.699385pt height=28.55226pt/>. Again, we know that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/34c64bc38d576730626fa5aa3714344c.svg?invert_in_darkmode" align=middle width=27.308655pt height=25.43409pt/> is rational by the induction hypothesis. As
+  a result, <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/064a0ae57c4ffa6cc341362204c68560.svg?invert_in_darkmode" align=middle width=55.619025pt height=25.43409pt/> is also rational, and the inverse of a rational function is still rational as long as that
+  function is not the zero function <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/178859b4ef1a2283b97eb175f4fc2020.svg?invert_in_darkmode" align=middle width=31.264035pt height=23.60787pt/>. While it is possible to construct zero via <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/4016fedf3b64ce40e89ea6179ff76c0c.svg?invert_in_darkmode" align=middle width=12.90201pt height=23.41515pt/>, they are
+  inherently ambiguous, and hence not in the proper domain of our analysis. Therefore, <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5895759cc417e03c35a06eed530a6b55.svg?invert_in_darkmode" align=middle width=19.934145pt height=25.43409pt/> is rational.
+
+Since this covers all cases of <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/8cd34385ed61aca950a6b06d09fb50ac.svg?invert_in_darkmode" align=middle width=7.1486415pt height=14.93184pt/>, it must be the case that <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/5895759cc417e03c35a06eed530a6b55.svg?invert_in_darkmode" align=middle width=19.934145pt height=25.43409pt/> is rational. <img src="https://rawgit.com/leegao/RegexEnumerator/svgs/svgs/365841a3c2f20d1b1a7fa5bf49ebb8ea.svg?invert_in_darkmode" align=middle width=12.27996pt height=22.96866pt/>
+
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 

@@ -598,6 +598,47 @@ Now, let us give the inductive definition of the reduction relations:
 This pair of reduction rules are implemented in `regex_enumerate.transfer.down_r` and `regex_enumerate.transfer.down_p`
 respectively.
 
+#### Proof that Regular Expressions generate Rational Functions
+
+**Theorem**: The translation $[\![e]\!]$ given by
+\begin{align*}
+[\![\epsilon]\!] &= 1 \\
+[\![x \in \Sigma]\!] &= x \\
+[\![e_0 \mid e_1]\!] &= [\![e_0]\!] + [\![e_1]\!] \\
+[\![e_0 e_1]\!] &= [\![e_0]\!] \times [\![e_1]\!] \\
+[\![e^*]\!] &= \frac{1}{1 - [\![e]\!]}
+\end{align*}
+only generates rational functions.
+
+*Proof*: By structural induction on $e$.
+
+* *Case $e = \epsilon$*: 
+  
+  $[\![e]\!] = 1$, which is rational.
+  
+* *Case $e = x \in \Sigma$*: 
+  
+  $[\![e]\!] = x$, which is rational.
+  
+* *Case $e = e_0 \mid e_1$*: 
+
+  $[\![e]\!] = [\![e_0]\!] + [\![e_1]\!]$. Now, by the induction hypothesis, both $[\![e_0]\!]$ and $[\![e_1]\!]$ are
+  rational. Since the sum of two rational functions is still rational, so too is $[\![e]\!]$.
+
+* *Case $e = e_0 e_1$*
+
+  $[\![e]\!] = [\![e_0]\!] \times [\![e_1]\!]$. Again, by the induction hypothesis, both $[\![e_0]\!]$ and $[\![e_1]\!]$ 
+  are rational. Since the product of two rational functions is still rational, so too is $[\![e]\!]$.
+  
+* *Case $e = e_0^*$*
+
+  $[\![e]\!] = \frac{1}{1 - [\![e_0]\!]}$. Again, we know that $[\![e_0]\!]$ is rational by the induction hypothesis. As
+  a result, $1 - [\![e_0]\!]$ is also rational, and the inverse of a rational function is still rational as long as that
+  function is not the zero function $\lambda x. 0$. While it is possible to construct zero via $\epsilon^*$, they are
+  inherently ambiguous, and hence not in the proper domain of our analysis. Therefore, $[\![e]\!]$ is rational.
+
+Since this covers all cases of $e$, it must be the case that $[\![e]\!]$ is rational. $\square$
+
 #### Additional Examples
 * `(00*1)*`: 1-separated strings that starts with 0 and ends with 1
 
