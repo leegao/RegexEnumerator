@@ -2,7 +2,7 @@ from collections import defaultdict
 
 import itertools
 import mpmath
-from numpy import array, zeros, eye, matmul
+from numpy import array, zeros, eye, dot
 from numpy.linalg import solve, norm, eigvals, matrix_power, det
 from numpy.polynomial import Polynomial as P
 from scipy.special import comb
@@ -266,7 +266,7 @@ def matrix_method(regex, threshold=1e-3):
     clusters = {root : key for root, key in clusters.items() if abs(root) > threshold ** 2}
     collection = collate(clusters)
     degree = len(collection)
-    exact = lambda n: matmul(e_accepts, matmul(matrix_power(A, n), e_1))
+    exact = lambda n: dot(e_accepts, dot(matrix_power(A, n), e_1))
     basis = lambda n: array([comb(n+k-1, k-1) * root**(n-k) for (root, k) in collate(clusters)])
     vandermonde_matrix = array([basis(num_states + n) for n in range(degree)])
     target = array([exact(num_states + n) for n in range(degree)])
