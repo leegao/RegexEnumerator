@@ -167,20 +167,26 @@ def extract_coefficients_algebraically(regex, what = None, threshold = 1e-3):
     clusters = cluster_roots(polynomial, roots, threshold=threshold)
 
     # roots of multiplicity k has expanded form binom[n+k-1,k-1] * (r)**(-n - k) * (-1)**k
-    degree = len(roots)
-    # This is the generator for the extended Vandermonde matrix augmented with the multiplicity of a root
-    basis = lambda n: array(
-        [comb(n + k - 1, k - 1) * (-1)**k * (root)**(-n - k) for (root, k) in collate(clusters)])
-    vandermonde_matrix = array([basis(n) for n in range(degree)])
-    target = array([exact(regex, n, what=what, use_overflow=False) for n in range(degree)])
-    partial_coefficients = solve(vandermonde_matrix, target)
+    if len(roots):
+        degree = len(roots)
+        # This is the generator for the extended Vandermonde matrix augmented with the multiplicity of a root
+        basis = lambda n: array(
+            [comb(n + k - 1, k - 1) * (-1)**k * (root)**(-n - k) for (root, k) in collate(clusters)])
+        vandermonde_matrix = array([basis(n) for n in range(degree)])
+        target = array([exact(regex, n, what=what, use_overflow=False) for n in range(degree)])
+        partial_coefficients = solve(vandermonde_matrix, target)
 
-    return (
-        # A function that computes the coefficient for n
-        (lambda n: abs(basis(n).dot(partial_coefficients)) + (overflow[n] if n in overflow else 0)),
-        # internal states to reconstruct the closed form enumeration
-        (dict(clusters), basis, partial_coefficients, polynomial, (overflow, (top, bottom)))
-    )
+        return (
+            # A function that computes the coefficient for n
+            (lambda n: abs(basis(n).dot(partial_coefficients)) + (overflow[n] if n in overflow else 0)),
+            # internal states to reconstruct the closed form enumeration
+            (dict(clusters), basis, partial_coefficients, polynomial, (overflow, (top, bottom)))
+        )
+    else:
+        return (
+            (lambda n: overflow[n] if n in overflow else 0),
+            (dict(clusters), (lambda n: []), array([]), polynomial, (overflow, (top, bottom)))
+        )
 
 
 def enumerate_coefficients(regex, what = None, threshold = 1e-3):
@@ -265,14 +271,18 @@ def matrix_method(regex, threshold=1e-3):
     clusters = cluster_roots(lambda root: det(A - root * eye(num_states)), eigenvalues, threshold)
     clusters = {root : key for root, key in clusters.items() if abs(root) > threshold ** 2}
     collection = collate(clusters)
-    degree = len(collection)
+
     exact = lambda n: dot(e_accepts, dot(matrix_power(A, n), e_1))
-    basis = lambda n: array([comb(n+k-1, k-1) * root**(n-k) for (root, k) in collate(clusters)])
-    vandermonde_matrix = array([basis(num_states + n) for n in range(degree)])
-    target = array([exact(num_states + n) for n in range(degree)])
-    partial_coefficients = solve(vandermonde_matrix, target)
+    if collection:
+        degree = len(collection)
+        basis = lambda n: array([comb(n+k-1, k-1) * root**(n-k) for (root, k) in collate(clusters)])
+        vandermonde_matrix = array([basis(num_states + n) for n in range(degree)])
+        target = array([exact(num_states + n) for n in range(degree)])
+        partial_coefficients = solve(vandermonde_matrix, target)
+    else:
+        partial_coefficients = array([])
     n = sympify('n')
-    series = 0
+    series = sympify('0')
     for i, (root, k) in enumerate(collection):
         symbolic_root = inverse_symbolic(root)
         partial_coefficient = inverse_symbolic(partial_coefficients[i][0])
@@ -296,10 +306,12 @@ if __name__ == '__main__':
         "(01*)*",  # all compositions of n
         "a*b*c*(dd)*|e",
         "(00*1)*00*",
+        "0|1"
     ]
     for regex in regexes:
         print("Checking %s." % regex)
         exact_form = list(islice(exact_coefficients(regex), 20))
+        closed_series = list(islice(enumerate_coefficients(regex), 20))
         # algebraic = list(islice(map(lambda x: int(round(x)), enumerate_coefficients(regex)), 20))
         # print("Expecting %s,\nActual    %s." % (exact_form, algebraic))
         # print("It's algebraic form is %s" % algebraic_form(regex))
@@ -308,4 +320,6 @@ if __name__ == '__main__':
         series = matrix_method(regex)
         print('Expecting:', exact_form)
         print('Actual:', [int(round(abs(evaluate_expression(series, i).evalf()))) for i in range(20)])
+        print('enumerate_coefficients:', closed_series)
         print('Series:', latex(series))
+        print('algebraic_form:', algebraic_form(regex))
